@@ -12,9 +12,9 @@ logging:
 spring:
   profiles: prod
   datasource:
-    url: jdbc:mysql://rm-wz9dhxg87delowam5jo.mysql.rds.aliyuncs.com/packingsmart-backend
+    url: jdbc:mysql://rm-wz9dhxg87delowam5jo.mysql.rds.aliyuncs.com/prod
     username: root
-    password: ${PARKINGSMART}
+    password: PARKINGSMART_PSW
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
