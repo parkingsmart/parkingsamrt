@@ -13,7 +13,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/packingsmart-backend
     username: root
-    password: oocl
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
