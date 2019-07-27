@@ -1,4 +1,9 @@
 package com.oocl.parkingsmart.exception;
 
-public class ParamInValidException {
+import org.springframework.http.HttpStatus;
+
+public class ParamInValidException extends SystemException{
+    ParamInValidException() {
+        super(HttpStatus.BAD_REQUEST,"传入参数有误");
+    }
 }

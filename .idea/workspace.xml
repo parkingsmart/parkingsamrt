@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ad84511b-8341-40ec-860e-1028332e300b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/ParkingSmartApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/ParkingSmartApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/SystemException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/SystemException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/ParamInValidException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/ParamInValidException.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -28,14 +27,23 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/SystemException.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/ParamInValidException.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="14" column="5" lean-forward="true" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+            <state relative-caret-position="132">
+              <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
               <folding>
-                <element signature="e#216#217#0" expanded="true" />
-                <element signature="e#257#258#0" expanded="true" />
+                <element signature="e#175#176#0" expanded="true" />
+                <element signature="e#221#222#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/NotEnoughCapacityException.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" column="115" selection-start-line="6" selection-start-column="41" selection-end-line="6" selection-end-column="115" />
             </state>
           </provider>
         </entry>
@@ -59,14 +67,16 @@
         <option value="$PROJECT_DIR$/src/main/resources/application.yml" />
         <option value="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/ParkingSmartApplication.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/SystemException.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/NotEnoughCapacityException.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/ParamInValidException.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1070" />
-    <option name="y" value="352" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="637" />
+    <option name="y" value="425" />
     <option name="width" value="1366" />
-    <option name="height" value="550" />
+    <option name="height" value="548" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -180,14 +190,28 @@
       <option name="project" value="LOCAL" />
       <updated>1564198910132</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="git commit -m&quot;定义后台异常处理基类&quot;">
+      <created>1564199369067</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1564199369067</updated>
+    </task>
+    <task id="LOCAL-00003" summary="git commit -m&quot;定义后台停车场容量满的异常处理类&quot;">
+      <created>1564199600462</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1564199600462</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1070" y="352" width="1366" height="550" extended-state="0" />
+    <frame x="551" y="547" width="1366" height="548" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.17650215" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.25425038" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -223,7 +247,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="git commit -m&quot;数据库环境搭建完毕&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="git commit -m&quot;数据库环境搭建完毕&quot;" />
+    <MESSAGE value="git commit -m&quot;定义后台异常处理基类&quot;" />
+    <MESSAGE value="git commit -m&quot;定义后台停车场容量满的异常处理类&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="git commit -m&quot;定义后台停车场容量满的异常处理类&quot;" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/Desktop/All/package-booking-backend/src/main/resources/application.yml">
@@ -233,21 +259,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/ParamInValidException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" column="34" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/ResourceConflictException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/NotEnoughCapacityException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
           <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
@@ -284,11 +296,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/SystemException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="14" column="5" lean-forward="true" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+        <state relative-caret-position="94">
+          <caret line="16" column="37" lean-forward="true" selection-start-line="16" selection-start-column="37" selection-end-line="16" selection-end-column="37" />
           <folding>
             <element signature="e#216#217#0" expanded="true" />
             <element signature="e#257#258#0" expanded="true" />
+            <element signature="e#453#454#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/NotEnoughCapacityException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="115" selection-start-line="6" selection-start-column="41" selection-end-line="6" selection-end-column="115" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/oocl/parkingsmart/exception/ParamInValidException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
+          <folding>
+            <element signature="e#175#176#0" expanded="true" />
+            <element signature="e#221#222#0" expanded="true" />
           </folding>
         </state>
       </provider>
