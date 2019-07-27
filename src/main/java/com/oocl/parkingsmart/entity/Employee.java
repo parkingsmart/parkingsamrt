@@ -8,14 +8,14 @@ import java.util.Objects;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    @NotNull
+    private Long id;
+    @Column(nullable = false)
     private String name;
-    @NotNull
+    @Column(unique = true,nullable = false)
     private String email;
-    @NotNull
+    @Column(unique = true,nullable = false)
     private String phone;
-    @NotNull
+    @Column(nullable = false)
     private String password;
     private int OfficeId;
     private boolean isWork;
@@ -23,11 +23,11 @@ public class Employee {
     public Employee() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -55,20 +55,20 @@ public class Employee {
         this.phone = phone;
     }
 
-    public int getOfficeId() {
-        return OfficeId;
-    }
-
-    public void setOfficeId(int officeId) {
-        OfficeId = officeId;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getOfficeId() {
+        return OfficeId;
+    }
+
+    public void setOfficeId(int officeId) {
+        OfficeId = officeId;
     }
 
     public boolean isWork() {
@@ -84,11 +84,15 @@ public class Employee {
         if (this == o) return true;
         if (!(o instanceof Employee)) return false;
         Employee employee = (Employee) o;
-        return getId() == employee.getId();
+        return getId().equals(employee.getId()) &&
+                getName().equals(employee.getName()) &&
+                getEmail().equals(employee.getEmail()) &&
+                getPhone().equals(employee.getPhone()) &&
+                getPassword().equals(employee.getPassword());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(getId(), getName(), getEmail(), getPhone(), getPassword());
     }
 }
