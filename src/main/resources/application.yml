@@ -1,21 +1,5 @@
 spring:
   profiles:
-    active: dev
----
-logging:
-  level:
-    org:
-      springframework:
-        web: DEBUG
-      hibernate: DEBUG
-spring:
-  profiles: dev
-  datasource:
-    url: jdbc:mysql://localhost/packingsmart-backend
-    username: root
-    password: oocl
-    driver-class-name: com.mysql.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
+        active: dev
+
 
