@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/packingsmart-backend
     username: root
-    password: ENC(Wd6i2Ol1+8bxk6Nl2W+ebw==)
+    password: oocl
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
