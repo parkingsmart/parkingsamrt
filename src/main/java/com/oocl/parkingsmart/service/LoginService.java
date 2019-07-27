@@ -7,7 +7,15 @@ import org.springframework.stereotype.Service;
 public class LoginService {
     @Autowired
     private EmployeeRepository employeeRepository;
-    public void loginAuthentication(String username,String password) {
-
+    public Employee loginAuthentication(String username,String password) {
+        Employee employee = null;
+        if(username.indexOf("@") > 0){
+            employee = employeeRepository.findByEmail(username);
+        }else if(username.length() == 11){
+            employee = employeeRepository.findByPhone(username);
+        }else {
+            employee = employeeRepository.findById(Long.parseLong(username)).get();
+        }
+        return employee;
     }
 }

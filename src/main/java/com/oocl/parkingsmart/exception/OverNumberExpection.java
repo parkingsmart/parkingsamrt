@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class OverNumberExpection extends SystemException{
 
-    OverNumberExpection() {
+    public OverNumberExpection() {
         super(HttpStatus.BAD_REQUEST,"Can't manage more than 3 parking lots");
     }
 
