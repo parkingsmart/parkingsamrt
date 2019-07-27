@@ -17,6 +17,7 @@ public class Employee {
     private String phone;
     @NotNull
     private String password;
+    private int OfficeId;
     private boolean isWork;
 
     public Employee() {
@@ -52,6 +53,14 @@ public class Employee {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public int getOfficeId() {
+        return OfficeId;
+    }
+
+    public void setOfficeId(int officeId) {
+        OfficeId = officeId;
     }
 
     public String getPassword() {

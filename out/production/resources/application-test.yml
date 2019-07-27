@@ -1,0 +1,21 @@
+server:
+    port: 8080
+logging:
+  path: /var/logs
+  file: parking-backend.log
+  level:
+    root: WARN
+    org:
+      springframework:
+        web: DEBUG
+      hibernate: DEBUG
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://rm-wz9dhxg87delowam5jo.mysql.rds.aliyuncs.com/pp
+    username: root
+    password: PARKINGSMART_PSW
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
