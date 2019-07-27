@@ -1,0 +1,16 @@
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+      hibernate: DEBUG
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost/packingsmart-backend
+    username: root
+    password: ENC(Wd6i2Ol1+8bxk6Nl2W+ebw==)
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
