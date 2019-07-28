@@ -21,7 +21,7 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping
-    public ResponseEntity getAllValidOrders(@RequestParam(required = false, defaultValue = "1")int page) {
+    public ResponseEntity getAllOrders(@RequestParam(required = false, defaultValue = "1")int page) {
         HashMap ordersMap = new HashMap();
         int allOrdersNum = orderService.getAllOrdersNum();
         ordersMap.put("AllOrdersNum", allOrdersNum);
@@ -34,6 +34,14 @@ public class OrderController {
     public ResponseEntity receiveAnOrder(@RequestBody Order order){
         orderService.addOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/newOrders")
+    public ResponseEntity getNewOrders(){
+        HashMap ordersMap = new HashMap();
+        List<Order> newOrders=orderService.getAllNewOrders();
+        ordersMap.put("newOrders", newOrders);
+        return ResponseEntity.ok().body(ordersMap);
     }
 
 }
