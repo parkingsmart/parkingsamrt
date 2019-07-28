@@ -5,6 +5,9 @@ import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.repository.EmployeeRepository;
 import com.oocl.parkingsmart.utils.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,5 +39,9 @@ public class EmployeeService {
 
     public List<Employee> getAll() {
         return employeeRepository.findAll();
+    }
+
+    public Page<Employee> fetchByPage(int page, int pageSzie) {
+        return employeeRepository.findAll(PageRequest.of(page - 1, pageSzie));
     }
 }
