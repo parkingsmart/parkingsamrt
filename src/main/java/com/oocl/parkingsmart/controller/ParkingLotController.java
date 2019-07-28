@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,9 +21,13 @@ public class ParkingLotController {
     @Autowired
     private ParkingLotService parkingLotService;
     @GetMapping
-    public ResponseEntity getAllParkingLots() {
-        List<ParkingLot> parkingLots = parkingLotService.getAllParkingLot();
-        return ResponseEntity.status(HttpStatus.OK).body(parkingLots);
+    public ResponseEntity getAllParkingLots(@RequestParam(required = false, defaultValue = "1")int page) {
+        HashMap parkingLotsMap = new HashMap();
+        int parkingLotsNum = parkingLotService.getAllParkingLotsNum();
+        parkingLotsMap.put("AllParkingLotsNum", parkingLotsNum);
+        List<ParkingLot> parkingLots = parkingLotService.getAllParkingLot(page);
+        parkingLotsMap.put("AllParkingLot", parkingLots);
+        return ResponseEntity.status(HttpStatus.OK).body(parkingLotsMap);
     }
 
     @PostMapping
