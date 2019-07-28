@@ -23,9 +23,11 @@ public class ParkingLotService {
         parkingLotRepository.save(parkingLot);
     }
 
-    public ParkingLot updateAParkingLot(Long id) {
-        ParkingLot parkingLot = parkingLotRepository.findById(id).get();
-        ParkingLot savedParkingLot =  parkingLotRepository.save(parkingLot);
+    public ParkingLot updateAParkingLot(Long id,ParkingLot parkingLot) {
+        ParkingLot targetParkingLot = parkingLotRepository.findById(id).get();
+        targetParkingLot.setActive(parkingLot.isActive());
+        targetParkingLot.setSize(parkingLot.getSize());
+        ParkingLot savedParkingLot =  parkingLotRepository.save(targetParkingLot);
         return savedParkingLot;
     }
 }

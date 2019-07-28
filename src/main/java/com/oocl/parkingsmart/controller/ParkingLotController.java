@@ -31,9 +31,9 @@ public class ParkingLotController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PutMapping(path = "/{id}")
-    public ResponseEntity putAPackageLot(@PathVariable Long id){
-        ParkingLot parkingLot = parkingLotService.updateAParkingLot(id);
-        return ResponseEntity.status(HttpStatus.OK).body(parkingLot);
+    public ResponseEntity putAPackageLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot){
+        ParkingLot savedparkingLot = parkingLotService.updateAParkingLot(id,parkingLot);
+        return ResponseEntity.status(HttpStatus.OK).body(savedparkingLot);
 
     }
 }

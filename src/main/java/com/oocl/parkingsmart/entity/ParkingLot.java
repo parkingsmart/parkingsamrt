@@ -48,4 +48,8 @@ public class ParkingLot {
     public void setParkedNum(int parkedNum) {
         this.parkedNum = parkedNum;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

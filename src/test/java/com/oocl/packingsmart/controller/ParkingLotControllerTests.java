@@ -27,8 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -43,15 +42,21 @@ public class ParkingLotControllerTests {
     public void deleteAll(){
         parkingLotRepository.deleteAll();
     }
-    @org.junit.jupiter.api.Test
-    public void should_return_parking_lot_list_when_find_all_parkinglots() throws Exception{
+    @Test
+    public void should_return_parking_lot_list_when_find_all_parking_lots() throws Exception{
+
         // given
-
-        //when
-
-        //then
-
-
+        ParkingLot parkingLotA = new ParkingLot();
+        parkingLotA.setName("ParkingLotA");
+        parkingLotA.setSize(10);
+        parkingLotA.setActive(true);
+        parkingLotA.setParkedNum(0);
+        parkingLotRepository.saveAndFlush(parkingLotA);
+        // when
+        String result = mockMvc.perform(get("/parking-lots")).andReturn().getResponse().getContentAsString();
+        JSONArray jsonArray = new JSONArray(result);
+        // then
+        Assertions.assertEquals(parkingLotA.getName(),jsonArray.getJSONObject(0).get("name"));
 
     }
     @Test
@@ -73,6 +78,28 @@ public class ParkingLotControllerTests {
         // then
         result.andExpect(status().isCreated());
         assertEquals(1,parkingLots.size());
+
+
+    }
+    @Test
+    public void should_put_a_parking_lot_size_when_success_put_a_parking_lot_info() throws Exception {
+        //Given
+        ParkingLot parkingLotA = new ParkingLot();
+        parkingLotA.setName("ParkingLotA");
+        parkingLotA.setSize(10);
+        parkingLotA.setActive(true);
+        parkingLotA.setParkedNum(0);
+        ParkingLot savedParkingLot = parkingLotRepository.saveAndFlush(parkingLotA);
+        // when
+        savedParkingLot.setSize(20);
+        String json = new ObjectMapper().writeValueAsString(savedParkingLot);
+        ResultActions result = this.mockMvc.perform(put("/parking-lots/" + savedParkingLot.getId()).
+                contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).
+                content(json));
+        int size = parkingLotRepository.findById(savedParkingLot.getId()).get().getSize();
+        // then
+        result.andExpect(status().isOk());
+        assertEquals(20,size);
 
 
     }
