@@ -1,6 +1,7 @@
 package com.oocl.packingsmart.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.parkingsmart.ParkingSmartApplication;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.repository.OrderRepository;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -67,6 +69,17 @@ public class OrderControllerTests {
         //then
         JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("newOrders");
         Assertions.assertEquals(1, jsonArray_Order.length());
+    }
+
+    @Test
+    public void should_return_created_when_receive_an_order() throws Exception{
+        // given
+        Date date = new Date();
+        Order order = new Order("粤CAB996",1,date.getTime(),date.getTime());
+        // when + then
+        String json = new ObjectMapper().writeValueAsString(order);
+        String content = this.mockMvc.perform(post("/orders").content(json)).andExpect(status().isCreated()).
+                andReturn().getResponse().getContentAsString();
     }
 
 }
