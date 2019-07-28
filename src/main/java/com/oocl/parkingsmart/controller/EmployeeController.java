@@ -60,6 +60,12 @@ public class EmployeeController {
         employeeService.updateParkingLotsManager(id, ids);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping(path = "/{id}/parking-lots/leaving")
+    public ResponseEntity updateParkingLotsManagerWithNull(@PathVariable("id") Long id, @RequestBody List<Long> ids) {
+        employeeService.updateParkingLotsManager(null, ids);
+        return ResponseEntity.ok().build();
+    }
 }
 
 
