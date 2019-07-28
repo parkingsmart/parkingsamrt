@@ -7,7 +7,7 @@ logging:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://localhost/packingsmart-backend
+    url: jdbc:mysql://localhost/parkingsmart-backend
     username: root
     password: oocl
     driver-class-name: com.mysql.jdbc.Driver
