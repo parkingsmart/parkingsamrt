@@ -4,6 +4,7 @@ import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.repository.EmployeeRepository;
 import com.oocl.parkingsmart.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +13,13 @@ import java.util.List;
 public class ParkingLotService {
     @Autowired
     private ParkingLotRepository parkingLotRepository;
-
-    public List<ParkingLot> getAllParkingLot() {
-        List<ParkingLot> parkingLots =  parkingLotRepository.findAll();
+    public static final int PAGE_SIZE = 10;
+    public int getAllParkingLotsNum(){
+        return parkingLotRepository.findAll().size();
+    }
+    public List<ParkingLot> getAllParkingLot(int page) {
+        PageRequest pageRequest = PageRequest.of(page-1,PAGE_SIZE);
+        List<ParkingLot> parkingLots =  parkingLotRepository.findAll(pageRequest).getContent();
         return parkingLots;
 
     }

@@ -78,9 +78,10 @@ public class OrderControllerTests {
     public void should_return_created_when_receive_an_order() throws Exception{
         // given
         Date date = new Date();
-        Order order = new Order("粤CAB996",1,date.getTime(),date.getTime());
-        // when + then
+        Order order = new Order("粤CAB996",1, date.getTime(), date.getTime());
+        // when
         String json = new ObjectMapper().writeValueAsString(order);
+        // then
         String content = this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)).andExpect(status().isCreated()).

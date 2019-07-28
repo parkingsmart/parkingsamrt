@@ -54,6 +54,12 @@ public class EmployeeController {
     public ResponseEntity fetchParkingLotsById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(employeeService.fetchParkingLotsById(id));
     }
+
+    @PostMapping(path = "/{id}/parking-lots/appointments")
+    public ResponseEntity updateParkingLotsManager(@PathVariable("id") Long id, @RequestBody List<Long> ids) {
+        employeeService.updateParkingLotsManager(id, ids);
+        return ResponseEntity.ok().build();
+    }
 }
 
 
