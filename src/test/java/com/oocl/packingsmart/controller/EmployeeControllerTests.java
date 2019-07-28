@@ -36,7 +36,10 @@ public class EmployeeControllerTests {
     public void should_return_created_when_success_add_order() throws Exception {
         // given
         employeeRepository.deleteAll();
-        Employee order = new Employee("ccc", "14253666@qq.com", "13455698877");
+        Employee order = new Employee();
+        order.setName("ccc");
+        order.setEmail("14253666@qq.com");
+        order.setPhone("13455698877");
         String json = new ObjectMapper().writeValueAsString(order);
 
         // when
@@ -52,8 +55,16 @@ public class EmployeeControllerTests {
     public void should_return_all_orders() throws Exception {
 
         employeeRepository.deleteAll();
-        Employee employee_1 = new Employee("aaa", "1332435@163.com", "12334335625","11223344");
-        Employee employee_2 = new Employee("bbb", "1333335@163.com", "12355335725","12223344");
+        Employee employee_1 = new Employee();
+        Employee employee_2 = new Employee();
+        employee_1.setName("aaa");
+        employee_1.setEmail("1332435@163.com");
+        employee_1.setPhone("12334335625");
+        employee_1.setPassword("11223344");
+        employee_2.setName("bbb");
+        employee_2.setEmail("1333335@163.com");
+        employee_2.setPhone("12355335725");
+        employee_2.setPassword("12223344");
         employeeRepository.saveAndFlush(employee_1);
         employeeRepository.saveAndFlush(employee_2);
         // when
