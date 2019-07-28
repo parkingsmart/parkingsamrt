@@ -18,8 +18,8 @@ public class OrderService {
 
     public static final int PAGE_SIZE = 10;
 
-    public int getAllOrdersNum() {
-        return orderRepository.findAll().size();
+    public Long getAllOrdersNum() {
+        return orderRepository.count();
     }
 
     public List<Order> getPageOrders(int page) {

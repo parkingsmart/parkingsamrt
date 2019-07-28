@@ -27,7 +27,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity getAllOrders(@RequestParam(required = false, defaultValue = "1")int page) {
         HashMap ordersMap = new HashMap();
-        int allOrdersNum = orderService.getAllOrdersNum();
+        Long allOrdersNum = orderService.getAllOrdersNum();
         ordersMap.put("AllOrdersNum", allOrdersNum);
         List<Order> orders = orderService.getPageOrders(page);
         ordersMap.put("pageOrders", orders);

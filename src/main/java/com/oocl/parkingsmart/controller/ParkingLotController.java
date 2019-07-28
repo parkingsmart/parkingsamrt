@@ -23,7 +23,7 @@ public class ParkingLotController {
     @GetMapping
     public ResponseEntity getAllParkingLots(@RequestParam(required = false, defaultValue = "1")int page) {
         HashMap parkingLotsMap = new HashMap();
-        int parkingLotsNum = parkingLotService.getAllParkingLotsNum();
+        Long parkingLotsNum = parkingLotService.getAllParkingLotsNum();
         parkingLotsMap.put("AllParkingLotsNum", parkingLotsNum);
         List<ParkingLot> parkingLots = parkingLotService.getAllParkingLot(page);
         parkingLotsMap.put("AllParkingLot", parkingLots);

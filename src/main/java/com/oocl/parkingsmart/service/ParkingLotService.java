@@ -16,8 +16,8 @@ public class ParkingLotService {
     private ParkingLotRepository parkingLotRepository;
     public static final int PAGE_SIZE = 10;
 
-    public int getAllParkingLotsNum() {
-        return parkingLotRepository.findAll().size();
+    public Long getAllParkingLotsNum() {
+        return parkingLotRepository.count();
     }
 
     public List<ParkingLot> getAllParkingLot(int page) {
