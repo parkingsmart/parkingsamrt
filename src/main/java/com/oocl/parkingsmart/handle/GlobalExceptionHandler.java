@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SystemException.class)
     @ResponseBody
     public ResponseEntity systemExceptionHandler(SystemException err){
-        return ResponseEntity.status(err.getErrorCode()).build();
+        return new ResponseEntity<>(err.getMessage(), err.getErrorCode());
     }
 
     @ExceptionHandler(JDBCException.class)

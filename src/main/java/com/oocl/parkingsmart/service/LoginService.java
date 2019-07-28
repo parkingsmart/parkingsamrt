@@ -3,6 +3,9 @@ import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
 @Service
 public class LoginService {
     @Autowired
@@ -14,7 +17,10 @@ public class LoginService {
         }else if(username.length() == 11){
             employee = employeeRepository.findByPhone(username);
         }else {
-            employee = employeeRepository.findById(Long.parseLong(username)).get();
+            Optional<Employee> res = employeeRepository.findById(Long.parseLong(username));
+            if(res.isPresent()){
+                employee = res.get();
+            }
         }
         return employee;
     }
