@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class EmployeeController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
