@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ParkingSmartApplication.class)
 @AutoConfigureMockMvc
+@ActiveProfiles("nactivetest")
 public class LoginControllerTests {
     @Autowired
     private MockMvc mockMvc;
@@ -33,6 +36,7 @@ public class LoginControllerTests {
     public void contextLoads() {
     }
 
+
     @Before
     public void init(){
         //given
@@ -44,7 +48,6 @@ public class LoginControllerTests {
         employee.setPassword("sdfwcnwuw");
         employeeRepository.saveAndFlush(employee);
     }
-
     @Test
     public void should_return_true_when_the_email_and_password_are_verified_to_be_correct() throws Exception {
         //When the email and password are verified to be correct, the login is successful.

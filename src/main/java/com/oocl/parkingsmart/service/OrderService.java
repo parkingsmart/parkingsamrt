@@ -30,4 +30,7 @@ public class OrderService {
         return order1;
     }
 
+    public List<Order> getAllNewOrders() {
+        return orderRepository.getNewOrders();
+    }
 }

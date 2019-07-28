@@ -2,6 +2,7 @@ package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.exception.NotEmployeeException;
+import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.service.EmployeeService;
 import com.oocl.parkingsmart.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity add(@RequestBody Employee employee) {
+    public ResponseEntity add(@RequestBody Employee employee) throws ResourceConflictException {
         employeeService.add(employee);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -41,6 +42,16 @@ public class EmployeeController {
     public ResponseEntity getAll() {
         List<Employee> orders = employeeService.getAll();
         return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping(params = {"page"})
+    public ResponseEntity fetchByPage(@RequestParam("page") int page, @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        return ResponseEntity.ok(employeeService.fetchByPage(page, pageSize));
+    }
+
+    @GetMapping(path = "/{id}/parking-lots")
+    public ResponseEntity fetchParkingLotsById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(employeeService.fetchParkingLotsById(id));
     }
 }
 
