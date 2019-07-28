@@ -82,7 +82,7 @@ public class ParkingLotControllerTests {
 
     }
     @Test
-    public void should_put_a_parking_lot_size_when_success_put_a_parking_lot_info() throws Exception {
+    public void should_update_a_parking_lot_size_when_success_put_a_parking_lot_info() throws Exception {
         //Given
         ParkingLot parkingLotA = new ParkingLot();
         parkingLotA.setName("ParkingLotA");
@@ -100,8 +100,26 @@ public class ParkingLotControllerTests {
         // then
         result.andExpect(status().isOk());
         assertEquals(20,size);
-
-
+    }
+    @Test
+    public void should_update_a_parking_lot_isActive_when_success_put_a_parking_lot_info() throws Exception {
+        //Given
+        ParkingLot parkingLotA = new ParkingLot();
+        parkingLotA.setName("ParkingLotA");
+        parkingLotA.setSize(10);
+        parkingLotA.setActive(true);
+        parkingLotA.setParkedNum(0);
+        ParkingLot savedParkingLot = parkingLotRepository.saveAndFlush(parkingLotA);
+        // when
+        savedParkingLot.setActive(false);
+        String json = new ObjectMapper().writeValueAsString(savedParkingLot);
+        ResultActions result = this.mockMvc.perform(put("/parking-lots/" + savedParkingLot.getId()).
+                contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).
+                content(json));
+        boolean isActive = parkingLotRepository.findById(savedParkingLot.getId()).get().isActive();
+        // then
+        result.andExpect(status().isOk());
+        assertEquals(false,isActive);
     }
 
 }
