@@ -8,18 +8,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ParkingLotService {
     @Autowired
     private ParkingLotRepository parkingLotRepository;
     public static final int PAGE_SIZE = 10;
-    public int getAllParkingLotsNum(){
+
+    public int getAllParkingLotsNum() {
         return parkingLotRepository.findAll().size();
     }
+
     public List<ParkingLot> getAllParkingLot(int page) {
-        PageRequest pageRequest = PageRequest.of(page-1,PAGE_SIZE);
-        List<ParkingLot> parkingLots =  parkingLotRepository.findAll(pageRequest).getContent();
+        PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE);
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll(pageRequest).getContent();
         return parkingLots;
 
     }
@@ -28,11 +31,19 @@ public class ParkingLotService {
         parkingLotRepository.save(parkingLot);
     }
 
-    public ParkingLot updateAParkingLot(Long id,ParkingLot parkingLot) {
+    public ParkingLot updateAParkingLot(Long id, ParkingLot parkingLot) {
         ParkingLot targetParkingLot = parkingLotRepository.findById(id).get();
         targetParkingLot.setActive(parkingLot.isActive());
         targetParkingLot.setSize(parkingLot.getSize());
-        ParkingLot savedParkingLot =  parkingLotRepository.save(targetParkingLot);
+        ParkingLot savedParkingLot = parkingLotRepository.save(targetParkingLot);
         return savedParkingLot;
+    }
+
+    public List<ParkingLot> getAllParkingLotByEmploy(Long employeeid) {
+        List<ParkingLot> parkingLotList = parkingLotRepository.findAll();
+        return parkingLotList.stream().filter(item -> item.getManager().equals(employeeid))
+                .collect(Collectors.toList());
+
+
     }
 }

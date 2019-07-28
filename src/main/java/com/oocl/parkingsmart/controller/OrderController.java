@@ -2,6 +2,7 @@ package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
+import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.service.OrderService;
@@ -46,10 +47,15 @@ public class OrderController {
         ordersMap.put("newOrders", newOrders);
         return ResponseEntity.ok().body(ordersMap);
     }
-    @PostMapping("/newOrders/{id}")
+    @PutMapping("/newOrders/{id}")
     public ResponseEntity getNewOrders(@PathVariable Long id,@RequestBody Employee employee) {
         orderService.grabOrderById(id,employee);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+//    @PutMapping("/newOrders/{id}/parkinglot")
+//    public ResponseEntity updateOrderParkingLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot){
+//        orderService.selectParkingLot();
+//        return ResponseEntity.ok().build();
+//    }
 }
