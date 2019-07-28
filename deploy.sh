@@ -16,4 +16,4 @@ else
 fi
 
 cp  ${jar_path}/${jar_name} ${www_path}
-java -jar ${www_path}/${jar_name} &
+java -jar --spring.profiles.active=test ${www_path}/${jar_name} &
