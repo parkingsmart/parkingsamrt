@@ -10,6 +10,7 @@ import com.oocl.parkingsmart.repository.ParkingLotRepository;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -53,6 +54,7 @@ public class EmployeeControllerTests {
     @Before
     public void init(){
         employeeRepository.deleteAll();
+        parkingLotRepository.deleteAll();
     }
     @Test
     public void should_return_created_when_success_add_order() throws Exception {
@@ -139,4 +141,5 @@ public class EmployeeControllerTests {
         assertEquals(4l,parkingLotRepository.findByName("parkingLot4").getManager().longValue());
         assertEquals(4l,parkingLotRepository.findByName("parkingLot5").getManager().longValue());
     }
+
 }
