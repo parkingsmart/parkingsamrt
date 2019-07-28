@@ -19,19 +19,6 @@ public class Employee {
     private int OfficeId;
     private boolean isWork;
 
-    public Employee(String name, String email, String phone) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-    }
-
-    public Employee(String name, String email, String phone, String password) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.password = password;
-    }
-
     public Employee() {
     }
 
