@@ -53,4 +53,8 @@ public class EmployeeService {
     public List<ParkingLot> fetchParkingLotsById(Long id) {
         return parkingLotRepository.findAllByManager(id);
     }
+
+    public void updateParkingLotsManager(Long id, List<Long> ids) {
+        parkingLotRepository.updateManagerByIds(id, ids);
+    }
 }
