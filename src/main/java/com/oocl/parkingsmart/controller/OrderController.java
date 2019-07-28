@@ -53,9 +53,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-//    @PutMapping("/newOrders/{id}/parkinglot")
-//    public ResponseEntity updateOrderParkingLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot){
-//        orderService.selectParkingLot();
-//        return ResponseEntity.ok().build();
-//    }
+    @PutMapping("/newOrders/{id}/parkinglot")
+    public ResponseEntity updateOrderParkingLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot){
+        orderService.selectParkingLotById(id,parkingLot);
+        return ResponseEntity.ok().build();
+    }
 }
