@@ -2,6 +2,7 @@ package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.exception.NotEmployeeException;
+import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.service.EmployeeService;
 import com.oocl.parkingsmart.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity add(@RequestBody Employee employee) {
+    public ResponseEntity add(@RequestBody Employee employee) throws ResourceConflictException {
         employeeService.add(employee);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
