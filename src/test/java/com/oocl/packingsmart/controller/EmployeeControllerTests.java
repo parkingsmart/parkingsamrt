@@ -71,7 +71,7 @@ public class EmployeeControllerTests {
         String result = mockMvc.perform(get("/users")).andReturn().getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(result);
         // then
-        Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(0).get("name"));
+        Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(1).get("name"));
     }
 
 
