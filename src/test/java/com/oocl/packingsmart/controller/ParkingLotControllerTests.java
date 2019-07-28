@@ -56,9 +56,9 @@ public class ParkingLotControllerTests {
         parkingLotRepository.saveAndFlush(parkingLotA);
         // when
         String result = mockMvc.perform(get("/parking-lots")).andReturn().getResponse().getContentAsString();
-        JSONArray jsonArray = new JSONArray(result);
+        JSONObject jsonObject = new JSONObject(result);
         // then
-        Assertions.assertEquals(parkingLotA.getName(),jsonArray.getJSONObject(0).get("name"));
+        Assertions.assertEquals(parkingLotA.getName(), ((JSONArray)jsonObject.get("AllParkingLot")).getJSONObject(0).get("name"));
 
     }
     @Test

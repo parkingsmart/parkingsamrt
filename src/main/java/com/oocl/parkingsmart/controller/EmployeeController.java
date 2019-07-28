@@ -1,6 +1,7 @@
 package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
+import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.exception.NotEmployeeException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.service.EmployeeService;
@@ -41,8 +42,8 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity getAll() {
-        List<Employee> orders = employeeService.getAll();
-        return ResponseEntity.ok(orders);
+        List<Employee> employees= employeeService.getAll();
+        return ResponseEntity.ok(employees);
     }
 
     @GetMapping(params = {"page"})
@@ -55,9 +56,21 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.fetchParkingLotsById(id));
     }
 
+    @PutMapping(path = "/{id}")
+    public ResponseEntity updateCareer(@PathVariable Long id,@RequestBody Employee employee) {
+        Employee result = employeeService.updateCareer(id, employee);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
     @PostMapping(path = "/{id}/parking-lots/appointments")
     public ResponseEntity updateParkingLotsManager(@PathVariable("id") Long id, @RequestBody List<Long> ids) {
         employeeService.updateParkingLotsManager(id, ids);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/{id}/parking-lots/leaving")
+    public ResponseEntity updateParkingLotsManagerWithNull(@PathVariable("id") Long id, @RequestBody List<Long> ids) {
+        employeeService.updateParkingLotsManager(null, ids);
         return ResponseEntity.ok().build();
     }
 }
