@@ -24,8 +24,8 @@ public class EmployeeController {
 
     @PostMapping(params = {"username","password"})
     public ResponseEntity loginAuthentication(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws NotEmployeeException {
-        Employee employee = loginService.loginAuthentication(username, password);
-        if (employee == null) {
+        boolean res = loginService.loginAuthentication(username, password);
+        if (!res) {
             throw new NotEmployeeException();
         }
         return ResponseEntity.ok().build();
