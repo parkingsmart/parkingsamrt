@@ -53,6 +53,11 @@ public class EmployeeService {
     public List<ParkingLot> fetchParkingLotsById(Long id) {
         return parkingLotRepository.findAllByManager(id);
     }
+    public Employee updateCareer(Long id, Employee employee) {
+        Employee updateEmployee = employeeRepository.findById(id).get();
+        updateEmployee.setOfficeId(employee.getOfficeId());
+        return employeeRepository.save(updateEmployee);
+    }
 
     public void updateParkingLotsManager(Long id, List<Long> ids) {
         parkingLotRepository.updateManagerByIds(id, ids);
