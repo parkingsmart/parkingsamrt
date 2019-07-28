@@ -13,9 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/parking-lots")
+@RequestMapping("/api/parking-lots")
 public class ParkingLotController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired

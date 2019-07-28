@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/orders")
-@CrossOrigin
+@RequestMapping("/api/orders")
 public class OrderController {
     @Autowired
     OrderService orderService;
