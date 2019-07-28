@@ -6,13 +6,14 @@ import javax.persistence.*;
 public class ParkingLot {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private  Long id;
+    private Long id;
     @Column(nullable = false,unique = true)
     private String name;
     @Column(nullable = false)
     private int size;
-    private  boolean isActive;
-    private  int parkedNum ;
+    private boolean isActive;
+    private int parkedNum;
+    private Long manager;
 
     public ParkingLot() {
     }
@@ -51,5 +52,17 @@ public class ParkingLot {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getManager() {
+        return manager;
+    }
+
+    public void setManager(Long manager) {
+        this.manager = manager;
     }
 }

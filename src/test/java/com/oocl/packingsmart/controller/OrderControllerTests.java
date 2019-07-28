@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ParkingSmartApplication.class)
 @AutoConfigureMockMvc
+@ActiveProfiles("nactivetest")
 public class OrderControllerTests {
 
     @Autowired
@@ -75,10 +78,13 @@ public class OrderControllerTests {
     public void should_return_created_when_receive_an_order() throws Exception{
         // given
         Date date = new Date();
-        Order order = new Order("粤CAB996",1,date.getTime(),date.getTime());
-        // when + then
+        Order order = new Order("粤CAB996",1, date.getTime(), date.getTime());
+        // when
         String json = new ObjectMapper().writeValueAsString(order);
-        String content = this.mockMvc.perform(post("/orders").content(json)).andExpect(status().isCreated()).
+        // then
+        String content = this.mockMvc.perform(post("/orders")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json)).andExpect(status().isCreated()).
                 andReturn().getResponse().getContentAsString();
     }
 

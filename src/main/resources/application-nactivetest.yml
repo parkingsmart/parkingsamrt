@@ -1,0 +1,13 @@
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+      hibernate: ERROR
+spring:
+  profiles: nactivetest
+  datasource:
+    url: jdbc:h2:mem:parkingsmart-backend
+  h2:
+    console:
+      enabled: true
