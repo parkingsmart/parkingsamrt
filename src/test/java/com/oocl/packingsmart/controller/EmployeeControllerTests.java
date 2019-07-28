@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ParkingSmartApplication.class})
 @AutoConfigureMockMvc
+@ActiveProfiles("nactivetest")
 public class EmployeeControllerTests {
 
     @Autowired
@@ -71,7 +73,7 @@ public class EmployeeControllerTests {
         String result = mockMvc.perform(get("/users")).andReturn().getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(result);
         // then
-        Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(1).get("name"));
+        Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(0).get("name"));
     }
 
 
