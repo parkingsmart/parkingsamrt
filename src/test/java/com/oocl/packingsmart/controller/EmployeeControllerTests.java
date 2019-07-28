@@ -23,6 +23,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,6 +46,9 @@ public class EmployeeControllerTests {
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @Before
     public void init(){
@@ -110,6 +116,27 @@ public class EmployeeControllerTests {
     @Test
     public void should_return_ok_when_update_success_parkingLot_manager_by_manager_id() throws Exception {
         //given
-
+        ParkingLot parkingLot1 = new ParkingLot("parkingLot1",10,2l);
+        ParkingLot parkingLot2 = new ParkingLot("parkingLot2",12,1l);
+        ParkingLot parkingLot3 = new ParkingLot("parkingLot3",13,3l);
+        ParkingLot parkingLot4 = new ParkingLot("parkingLot4",10,2l);
+        ParkingLot parkingLot5 = new ParkingLot("parkingLot5",10,2l);
+        parkingLotRepository.saveAll(Arrays.asList(parkingLot1,parkingLot2,parkingLot3,parkingLot4,parkingLot5));
+        List<Long> ids = Arrays.asList(parkingLotRepository.findByName("parkingLot1").getId(),
+                parkingLotRepository.findByName("parkingLot2").getId(),
+                parkingLotRepository.findByName("parkingLot3").getId(),
+                parkingLotRepository.findByName("parkingLot4").getId(),
+                parkingLotRepository.findByName("parkingLot5").getId());
+        //when
+        mockMvc.perform(post("/users/4/parking-lots/appointments")
+        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .content(mapper.writeValueAsString(ids)))
+        .andExpect(status().isOk());
+        assertEquals(5,parkingLotRepository.findAllByManager(4l).size());
+        assertEquals(4l,parkingLotRepository.findByName("parkingLot1").getManager().longValue());
+        assertEquals(4l,parkingLotRepository.findByName("parkingLot2").getManager().longValue());
+        assertEquals(4l,parkingLotRepository.findByName("parkingLot3").getManager().longValue());
+        assertEquals(4l,parkingLotRepository.findByName("parkingLot4").getManager().longValue());
+        assertEquals(4l,parkingLotRepository.findByName("parkingLot5").getManager().longValue());
     }
 }

@@ -17,4 +17,6 @@ public interface ParkingLotRepository  extends JpaRepository<ParkingLot,Long> {
     @Transactional
     @Query(value = "UPDATE ParkingLot SET manager=:manager WHERE id IN :ids")
     void updateManagerByIds(@Param("manager") Long manager, @Param("ids") List<Long> ids);
+
+    ParkingLot findByName(String name);
 }
