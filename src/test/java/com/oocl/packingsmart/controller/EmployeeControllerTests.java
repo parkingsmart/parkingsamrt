@@ -33,14 +33,14 @@ public class EmployeeControllerTests {
     private EmployeeRepository employeeRepository;
 
     @Test
-    public void should_return_created_sucessed_when_add_a_users() throws Exception {
+    public void should_return_created_when_success_add_order() throws Exception {
         // given
         employeeRepository.deleteAll();
-        Employee employee = new Employee();
-        employee.setName("ccc");
-        employee.setEmail("14253666@qq.com");
-        employee.setPhone("13455698877");
-        String json = new ObjectMapper().writeValueAsString(employee);
+        Employee order = new Employee();
+        order.setName("ccc");
+        order.setEmail("14253666@qq.com");
+        order.setPhone("13455698877");
+        String json = new ObjectMapper().writeValueAsString(order);
 
         // when
         ResultActions result = mockMvc.perform(post("/users")
@@ -52,7 +52,7 @@ public class EmployeeControllerTests {
     }
 
     @Test
-    public void should_return_users_list_when_get_all_users() throws Exception {
+    public void should_return_all_orders() throws Exception {
 
         employeeRepository.deleteAll();
         Employee employee_1 = new Employee();
@@ -73,5 +73,6 @@ public class EmployeeControllerTests {
         // then
         Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(1).get("name"));
     }
+
 
 }
