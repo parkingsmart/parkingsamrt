@@ -56,7 +56,7 @@ public class OrderControllerTests {
         // given
 
         //when
-        String content = this.mockMvc.perform(get("/orders")).andExpect(status().isOk()).
+        String content = this.mockMvc.perform(get("/api/orders")).andExpect(status().isOk()).
                 andReturn().getResponse().getContentAsString();
         //then
         JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("pageOrders");
@@ -67,7 +67,7 @@ public class OrderControllerTests {
         // given
 
         //when
-        String content = this.mockMvc.perform(get("/orders/newOrders")).andExpect(status().isOk()).
+        String content = this.mockMvc.perform(get("/api/orders/newOrders")).andExpect(status().isOk()).
                 andReturn().getResponse().getContentAsString();
         //then
         JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("newOrders");
@@ -82,7 +82,7 @@ public class OrderControllerTests {
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
-        String content = this.mockMvc.perform(post("/orders")
+        String content = this.mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)).andExpect(status().isCreated()).
                 andReturn().getResponse().getContentAsString();
