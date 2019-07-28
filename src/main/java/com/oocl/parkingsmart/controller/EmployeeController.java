@@ -48,6 +48,11 @@ public class EmployeeController {
     public ResponseEntity fetchByPage(@RequestParam("page") int page, @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
         return ResponseEntity.ok(employeeService.fetchByPage(page, pageSize));
     }
+
+    @GetMapping(path = "/{id}/parking-lots")
+    public ResponseEntity fetchParkingLotsById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(employeeService.fetchParkingLotsById(id));
+    }
 }
 
 

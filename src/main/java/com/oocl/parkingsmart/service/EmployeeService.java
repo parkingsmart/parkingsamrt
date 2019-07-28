@@ -1,8 +1,10 @@
 package com.oocl.parkingsmart.service;
 
 import com.oocl.parkingsmart.entity.Employee;
+import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.repository.EmployeeRepository;
+import com.oocl.parkingsmart.repository.ParkingLotRepository;
 import com.oocl.parkingsmart.utils.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,9 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
 
     public void add(Employee employee) throws ResourceConflictException {
         String password =NumberUtil.createPwd(8);
@@ -43,5 +48,9 @@ public class EmployeeService {
 
     public Page<Employee> fetchByPage(int page, int pageSzie) {
         return employeeRepository.findAll(PageRequest.of(page - 1, pageSzie));
+    }
+
+    public List<ParkingLot> fetchParkingLotsById(Long id) {
+        return parkingLotRepository.findAllByManager(id);
     }
 }
