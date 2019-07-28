@@ -1,3 +1,5 @@
+server:
+  port: 8001
 logging:
   level:
     org:
@@ -7,10 +9,12 @@ logging:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://localhost/packingsmart-backend
+    url: jdbc:mysql://localhost/parkingsmart-backend
     username: root
-    password: oocl
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+
+
