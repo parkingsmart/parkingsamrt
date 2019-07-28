@@ -57,5 +57,16 @@ public class OrderControllerTests {
         JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("pageOrders");
         Assertions.assertEquals("粤A12345", jsonArray_Order.getJSONObject(0).getString("carNumebr"));
     }
+    @Test
+    public void should_return_new_order_list_when_find_all_new_orders() throws Exception{
+        // given
+
+        //when
+        String content = this.mockMvc.perform(get("/orders/newOrders")).andExpect(status().isOk()).
+                andReturn().getResponse().getContentAsString();
+        //then
+        JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("newOrders");
+        Assertions.assertEquals(1, jsonArray_Order.length());
+    }
 
 }
