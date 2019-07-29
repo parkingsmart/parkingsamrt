@@ -22,7 +22,7 @@ public class LoginService {
             Optional<Employee> res = employeeRepository.findById(Long.parseLong(username));
             if(res.isPresent()){
                 employee = res.get();
-                return employee!=null?((employee.getPassword().equals(password))?employee:null):null;
+                return (employee.getPassword().equals(password))?employee:null;
             }
             return null;
         }
