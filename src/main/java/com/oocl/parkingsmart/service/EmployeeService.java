@@ -56,7 +56,7 @@ public class EmployeeService {
     public Employee updateCareer(Long id, Employee employee) {
         Employee updateEmployee = employeeRepository.findById(id).get();
         updateEmployee.setOfficeId(employee.getOfficeId());
-        return employeeRepository.save(updateEmployee);
+        return employeeRepository.saveAndFlush(updateEmployee);
     }
 
     public void updateParkingLotsManager(Long id, List<Long> ids) {
