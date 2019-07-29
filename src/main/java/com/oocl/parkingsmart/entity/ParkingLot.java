@@ -18,6 +18,12 @@ public class ParkingLot {
     public ParkingLot() {
     }
 
+    public ParkingLot(String name, int size, Long manager) {
+        this.name = name;
+        this.size = size;
+        this.manager = manager;
+    }
+
     public String getName() {
         return name;
     }

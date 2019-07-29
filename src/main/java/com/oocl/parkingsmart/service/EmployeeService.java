@@ -56,10 +56,14 @@ public class EmployeeService {
     public Employee updateCareer(Long id, Employee employee) {
         Employee updateEmployee = employeeRepository.findById(id).get();
         updateEmployee.setOfficeId(employee.getOfficeId());
-        return employeeRepository.save(updateEmployee);
+        return employeeRepository.saveAndFlush(updateEmployee);
     }
 
     public void updateParkingLotsManager(Long id, List<Long> ids) {
         parkingLotRepository.updateManagerByIds(id, ids);
+    }
+
+    public Page<Employee> fetchByPageAndOfficeId(int page, int pageSize, Integer officeId) {
+        return employeeRepository.findAllByOfficeId(PageRequest.of(page - 1, pageSize), officeId.intValue());
     }
 }

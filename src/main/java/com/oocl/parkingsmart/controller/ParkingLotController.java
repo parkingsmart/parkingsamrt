@@ -13,9 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/parking-lots")
+@RequestMapping("/api/parking-lots")
 public class ParkingLotController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
@@ -23,7 +22,7 @@ public class ParkingLotController {
     @GetMapping
     public ResponseEntity getAllParkingLots(@RequestParam(required = false, defaultValue = "1")int page) {
         HashMap parkingLotsMap = new HashMap();
-        int parkingLotsNum = parkingLotService.getAllParkingLotsNum();
+        Long parkingLotsNum = parkingLotService.getAllParkingLotsNum();
         parkingLotsMap.put("AllParkingLotsNum", parkingLotsNum);
         List<ParkingLot> parkingLots = parkingLotService.getAllParkingLot(page);
         parkingLotsMap.put("AllParkingLot", parkingLots);
@@ -40,5 +39,10 @@ public class ParkingLotController {
         ParkingLot savedparkingLot = parkingLotService.updateAParkingLot(id,parkingLot);
         return ResponseEntity.status(HttpStatus.OK).body(savedparkingLot);
 
+    }
+    @GetMapping("/{employeeid}")
+    public ResponseEntity getAllParkingLotByEmployee(@PathVariable Long employeeid){
+        List<ParkingLot> parkingLotList=parkingLotService.getAllParkingLotByEmploy(employeeid);
+        return ResponseEntity.status(HttpStatus.OK).body(parkingLotList);
     }
 }
