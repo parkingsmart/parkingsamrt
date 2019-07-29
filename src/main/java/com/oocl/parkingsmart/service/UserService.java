@@ -6,10 +6,12 @@ import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -32,7 +34,7 @@ public class UserService {
 
     public User loginAuthentication(String username, String password) throws AuthenticateFailedException {
         User user = userRepository.findByPhone(username);
-        if(user == null){
+        if(user == null || !user.getPassword().equals(password)){
             throw new AuthenticateFailedException();
         }
         user.setPassword("");
