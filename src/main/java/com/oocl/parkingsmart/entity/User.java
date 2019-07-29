@@ -15,6 +15,11 @@ public class User {
     public User() {
     }
 
+    public User(String username, String password) {
+        phone = username;
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }

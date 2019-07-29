@@ -1,8 +1,7 @@
 package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
-import com.oocl.parkingsmart.entity.ParkingLot;
-import com.oocl.parkingsmart.exception.NotEmployeeException;
+import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.service.EmployeeService;
 import com.oocl.parkingsmart.service.LoginService;
@@ -25,10 +24,10 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/login")
-    public ResponseEntity loginAuthentication(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws NotEmployeeException {
+    public ResponseEntity loginAuthentication(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws AuthenticateFailedException {
         Employee res = loginService.loginAuthentication(username, password);
         if (res == null) {
-            throw new NotEmployeeException();
+            throw new AuthenticateFailedException();
         }
         res.setPassword("");
         return ResponseEntity.ok().body(res);
