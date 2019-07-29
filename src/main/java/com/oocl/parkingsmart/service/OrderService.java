@@ -3,6 +3,7 @@ package com.oocl.parkingsmart.service;
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
+import com.oocl.parkingsmart.exception.NotEnoughCapacityException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +48,16 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public void updateOrderParkingLot(Long id, ParkingLot parkingLot) {
+    public void updateOrderParkingLot(Long id, ParkingLot parkingLot) throws NotEnoughCapacityException{
         Order order = orderRepository.findById(id).get();
-        order.setParkingLotId(parkingLot.getId());
-        orderRepository.save(order);
+        ParkingLot targetParkingLot=parkingLotRepository.findById(parkingLot.getId()).get();
+        if(targetParkingLot.getSize()>targetParkingLot.getParkedNum()){
+            targetParkingLot.setParkedNum(targetParkingLot.getParkedNum()+1);
+            order.setParkingLotId(parkingLot.getId());
+            orderRepository.save(order);
+        }else{
+            throw new NotEnoughCapacityException("车位已不足");
+        }
     }
 
     public void finishOrder(Long id) {
@@ -58,6 +65,7 @@ public class OrderService {
         if(order.getParkingLotId()!=null){
             order.setStatus(2);
             ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
+            parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
             parkingLotRepository.saveAndFlush(parkingLot);
             orderRepository.save(order);
         }

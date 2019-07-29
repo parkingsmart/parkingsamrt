@@ -3,6 +3,7 @@ package com.oocl.parkingsmart.controller;
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
+import com.oocl.parkingsmart.exception.NotEnoughCapacityException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.service.OrderService;
@@ -53,7 +54,7 @@ public class OrderController {
     }
 
     @PutMapping("/newOrders/{id}/parkinglot")
-    public ResponseEntity updateOrderParkingLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot){
+    public ResponseEntity updateOrderParkingLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot) throws NotEnoughCapacityException {
         orderService.updateOrderParkingLot(id,parkingLot);
         return ResponseEntity.ok().build();
     }
