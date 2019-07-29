@@ -4,6 +4,7 @@ import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.repository.OrderRepository;
+import com.oocl.parkingsmart.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class OrderService {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    ParkingLotRepository parkingLotRepository;
 
     public static final int PAGE_SIZE = 10;
 
@@ -43,9 +47,20 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public void selectParkingLotById(Long id, ParkingLot parkingLot) {
+    public void updateOrderParkingLot(Long id, ParkingLot parkingLot) {
         Order order = orderRepository.findById(id).get();
         order.setParkingLotId(parkingLot.getId());
         orderRepository.save(order);
+    }
+
+    public void finishOrder(Long id) {
+        Order order = orderRepository.findById(id).get();
+        if(order.getParkingLotId()!=null){
+            order.setStatus(2);
+            ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
+            parkingLotRepository.saveAndFlush(parkingLot);
+            orderRepository.save(order);
+        }
+
     }
 }
