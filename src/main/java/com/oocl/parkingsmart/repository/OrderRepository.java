@@ -1,12 +1,18 @@
 package com.oocl.parkingsmart.repository;
 
 import com.oocl.parkingsmart.entity.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query(value = "select * from order_list where status=0",nativeQuery = true)
-    List<Order> getNewOrders();
+
+    List<Order> findAllByStatus(int status);
+
+    Page<Order> findByStatus(int status, Pageable Pageable);
+
+
 }
