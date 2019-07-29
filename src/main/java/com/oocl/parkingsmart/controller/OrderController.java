@@ -63,6 +63,12 @@ public class OrderController {
         return ResponseEntity.ok().body(ordersMap);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getOrdersByStatus(@PathVariable Long id){
+        Order order=orderService.getOrdersById(id);
+        return ResponseEntity.ok().body(order);
+    }
+
     @PostMapping
     public ResponseEntity receiveAnOrder(@RequestBody Order order){
         orderService.addOrder(order);
