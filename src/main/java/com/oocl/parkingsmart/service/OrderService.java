@@ -23,6 +23,10 @@ public class OrderService {
 
     public static final int PAGE_SIZE = 10;
 
+    public List<Order> getAllOrders(){
+        return orderRepository.findAll();
+    }
+
     public Long getAllOrdersNum() {
         return orderRepository.count();
     }
@@ -37,8 +41,12 @@ public class OrderService {
         return order1;
     }
 
-    public List<Order> getAllNewOrders() {
-        return orderRepository.getNewOrders();
+    public List<Order> getOrdersByStatus(int status) {
+        return orderRepository.findAllByStatus(status);
+    }
+
+    public List<Order> getPageOrdersByStatus(int status, int page){
+        return orderRepository.findByStatus(status, new PageRequest(page - 1, PAGE_SIZE)).getContent();
     }
 
     public void grabOrderById(Long id, Employee employee) {

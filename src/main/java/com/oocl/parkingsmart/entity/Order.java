@@ -10,36 +10,46 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
-    private String carNumebr;
-    private Long parkingLotId;
     private Long employeeId;
+
     @Column(nullable = false)
-    private Integer type;
+    private Long userId;
+    private Long parkingLotId;
+
+    @Column(nullable = false)
+    private String carNumber;
+
+    private Long endAt;
+
     @Column(nullable = false)
     private Long createAt;
     @Column(nullable = false)
     private Long appointTime;
+    @Column(nullable = false)
+    private String appointAddress;
     private Integer status = 0;
 
     public Order() {
     }
 
-    public Order(String carNumebr, Integer type, Long createAt, Long appointTime) {
-        this.carNumebr = carNumebr;
-        this.type = type;
+    public Order(Long employeeId, Long userId, Long parkingLotId, String carNumber, Long endAt, Long createAt, Long appointTime, String appointAddress, Integer status) {
+        this.employeeId = employeeId;
+        this.userId = userId;
+        this.parkingLotId = parkingLotId;
+        this.carNumber = carNumber;
+        this.endAt = endAt;
         this.createAt = createAt;
         this.appointTime = appointTime;
+        this.appointAddress = appointAddress;
+        this.status = status;
     }
 
-    public Order(String carNumebr, Long parkingLotId, Long employeeId, Integer type, Long createAt, Long appointTime, Integer status) {
-        this.carNumebr = carNumebr;
-        this.parkingLotId = parkingLotId;
-        this.employeeId = employeeId;
-        this.type = type;
+    public Order(String carNumber, Long createAt, Long appointTime, String appointAddress, Long userId) {
+        this.userId = userId;
         this.createAt = createAt;
         this.appointTime = appointTime;
-        this.status = status;
+        this.carNumber = carNumber;
+        this.appointAddress = appointAddress;
     }
 
     public Long getId() {
@@ -50,12 +60,20 @@ public class Order {
         this.id = id;
     }
 
-    public String getCarNumebr() {
-        return carNumebr;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setCarNumebr(String carNumebr) {
-        this.carNumebr = carNumebr;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getParkingLotId() {
@@ -66,28 +84,20 @@ public class Order {
         this.parkingLotId = parkingLotId;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public String getCarNumber() {
+        return carNumber;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
     }
 
-    public Integer getType() {
-        return type;
+    public Long getEndAt() {
+        return endAt;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setEndAt(Long endAt) {
+        this.endAt = endAt;
     }
 
     public Long getCreateAt() {
@@ -104,5 +114,21 @@ public class Order {
 
     public void setAppointTime(Long appointTime) {
         this.appointTime = appointTime;
+    }
+
+    public String getAppointAddress() {
+        return appointAddress;
+    }
+
+    public void setAppointAddress(String appointAddress) {
+        this.appointAddress = appointAddress;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
