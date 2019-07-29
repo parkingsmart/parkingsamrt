@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,10 +22,14 @@ public class ParkingLotService {
     }
 
     public List<ParkingLot> getAllParkingLot(int page) {
-        PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE);
-        List<ParkingLot> parkingLots = parkingLotRepository.findAll(pageRequest).getContent();
-        return parkingLots;
-
+        if(page == 0 ){
+            List<ParkingLot> parkingLots = parkingLotRepository.findAll();
+            return parkingLots;
+        }else {
+            PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE);
+            List<ParkingLot> parkingLots = parkingLotRepository.findAll(pageRequest).getContent();
+            return parkingLots;
+        }
     }
 
     public void addParkingLot(ParkingLot parkingLot) {
@@ -45,5 +50,14 @@ public class ParkingLotService {
                 .collect(Collectors.toList());
 
 
+    }
+
+    public boolean isExistParkingLot(String parkingLotName) {
+        Optional<ParkingLot>  parkingLot = Optional.of(parkingLotRepository.findByName(parkingLotName));
+        if(parkingLot.isPresent()){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
