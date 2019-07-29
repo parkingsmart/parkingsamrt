@@ -48,7 +48,7 @@ public class OrderControllerTests {
         orderRepository.deleteAll();
         orders.clear();
         Date date = new Date();
-        orderRepository.save(new Order("粤A12345",1,date.getTime(),date.getTime()));
+        orderRepository.save(new Order("粤A12345", date.getTime(), date.getTime(), "南方软件园", 1l));
     }
 
     @Test
@@ -59,18 +59,18 @@ public class OrderControllerTests {
         String content = this.mockMvc.perform(get("/api/orders")).andExpect(status().isOk()).
                 andReturn().getResponse().getContentAsString();
         //then
-        JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("pageOrders");
-        Assertions.assertEquals("粤A12345", jsonArray_Order.getJSONObject(0).getString("carNumebr"));
+        JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("orders");
+        Assertions.assertEquals("粤A12345", jsonArray_Order.getJSONObject(0).getString("carNumber"));
     }
     @Test
     public void should_return_new_order_list_when_find_all_new_orders() throws Exception{
         // given
 
         //when
-        String content = this.mockMvc.perform(get("/api/orders/newOrders")).andExpect(status().isOk()).
+        String content = this.mockMvc.perform(get("/api/orders")).andExpect(status().isOk()).
                 andReturn().getResponse().getContentAsString();
         //then
-        JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("newOrders");
+        JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("orders");
         Assertions.assertEquals(1, jsonArray_Order.length());
     }
 
@@ -78,7 +78,7 @@ public class OrderControllerTests {
     public void should_return_created_when_receive_an_order() throws Exception{
         // given
         Date date = new Date();
-        Order order = new Order("粤CAB996",1, date.getTime(), date.getTime());
+        Order order = new Order("粤CAB996", date.getTime(), date.getTime(), "南方软件园", 1l);
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
