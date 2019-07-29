@@ -68,15 +68,15 @@ public class OrderService {
         }
     }
 
-    public void finishOrder(Long id) {
+
+    public void updateOrderStatus(Long id, int status) {
         Order order = orderRepository.findById(id).get();
         if(order.getParkingLotId()!=null){
-            order.setStatus(2);
+            order.setStatus(status);
             ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
             parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
             parkingLotRepository.saveAndFlush(parkingLot);
             orderRepository.save(order);
         }
-
     }
 }

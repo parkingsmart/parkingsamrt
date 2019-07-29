@@ -70,7 +70,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity getNewOrders(@PathVariable Long id,@RequestBody Employee employee) {
+    public ResponseEntity grabOrderById(@PathVariable Long id,@RequestBody Employee employee) {
         orderService.grabOrderById(id,employee);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -80,9 +80,9 @@ public class OrderController {
         orderService.updateOrderParkingLot(id,parkingLot);
         return ResponseEntity.ok().build();
     }
-    @PatchMapping("/newOrders/{id}")
-    public ResponseEntity finishOrder(@PathVariable Long id){
-        orderService.finishOrder(id);
+    @PatchMapping("/{id}")
+    public ResponseEntity updateOrderStatus(@PathVariable Long id,@RequestParam int status ){
+        orderService.updateOrderStatus(id,status);
         return ResponseEntity.ok().build();
     }
 
