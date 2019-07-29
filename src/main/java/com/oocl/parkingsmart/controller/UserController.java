@@ -36,8 +36,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
     @PutMapping(path = "/{id}")
-    public ResponseEntity putUserOrder(@PathVariable Long id,@RequestBody Long oderID,@RequestBody String msg){
-        Order order = userService.fetchACar(id,oderID,msg);
+    public ResponseEntity putUserOrder(@PathVariable Long id,@RequestParam(name = "oderID") Long oderID){
+        Order order = userService.fetchACar(id,oderID);
         return ResponseEntity.status(HttpStatus.OK).body(order);
 
     }

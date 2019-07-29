@@ -25,7 +25,7 @@ public class UserService {
         return resultorderList;
     }
 
-    public Order fetchACar(Long id, Long oderID,String msg) {
+    public Order fetchACar(Long id, Long oderID) {
         Order order = orderRepository.findById(oderID).get();
         order.setStatus(3);
         Order savedOrder = orderRepository.save(order);
@@ -34,7 +34,7 @@ public class UserService {
 
     public User loginAuthentication(String username, String password) throws AuthenticateFailedException {
         User user = userRepository.findByPhone(username);
-        if(user == null || !user.getPassword().equals(password)){
+        if (user == null || !user.getPassword().equals(password)) {
             throw new AuthenticateFailedException();
         }
         user.setPassword("");
@@ -42,6 +42,6 @@ public class UserService {
     }
 
     public User registered(String username, String password) {
-        return userRepository.saveAndFlush(new User(username,password));
+        return userRepository.saveAndFlush(new User(username, password));
     }
 }
