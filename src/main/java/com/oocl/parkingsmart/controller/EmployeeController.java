@@ -46,8 +46,16 @@ public class EmployeeController {
     }
 
     @GetMapping(params = {"page"})
-    public ResponseEntity fetchByPage(@RequestParam("page") int page, @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
-        return ResponseEntity.ok(employeeService.fetchByPage(page, pageSize));
+    public ResponseEntity fetchByPage(
+            @RequestParam(name = "officeId", required = false) Integer officeId,
+            @RequestParam("page") int page,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize
+    ) {
+        if (officeId == null) {
+            return ResponseEntity.ok(employeeService.fetchByPage(page, pageSize));
+        } else {
+            return ResponseEntity.ok(employeeService.fetchByPageAndOfficeId(page, pageSize, officeId));
+        }
     }
 
     @GetMapping(path = "/{id}/parking-lots")

@@ -62,4 +62,8 @@ public class EmployeeService {
     public void updateParkingLotsManager(Long id, List<Long> ids) {
         parkingLotRepository.updateManagerByIds(id, ids);
     }
+
+    public Page<Employee> fetchByPageAndOfficeId(int page, int pageSize, Integer officeId) {
+        return employeeRepository.findAllByOfficeId(PageRequest.of(page - 1, pageSize), officeId.intValue());
+    }
 }
