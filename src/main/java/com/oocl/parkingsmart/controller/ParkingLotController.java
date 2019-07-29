@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/parking-lots")
 public class ParkingLotController {

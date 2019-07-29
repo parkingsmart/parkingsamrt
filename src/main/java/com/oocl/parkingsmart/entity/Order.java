@@ -11,14 +11,18 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long employeeId;
+
     @Column(nullable = false)
     private Long userId;
     private Long parkingLotId;
+
     @Column(nullable = false)
-    private String carNumebr;
-    private Long endTime;
+    private String carNumber;
+
+    private Long endAt;
+
     @Column(nullable = false)
-    private Long startTime;
+    private Long createAt;
     @Column(nullable = false)
     private Long appointTime;
     @Column(nullable = false)
@@ -28,25 +32,24 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long userId, String carNumebr, Long startTime, Long appointTime, String appointAddress) {
-        this.userId = userId;
-        this.carNumebr = carNumebr;
-        this.startTime = startTime;
-        this.appointTime = appointTime;
-        this.appointAddress = appointAddress;
-    }
-
-    public Order(Long id, Long employeeId, Long userId, Long parkingLotId, String carNumebr, Long endTime, Long startTime, Long appointTime, String appointAddress, Integer status) {
-        this.id = id;
+    public Order(Long employeeId, Long userId, Long parkingLotId, String carNumber, Long endAt, Long createAt, Long appointTime, String appointAddress, Integer status) {
         this.employeeId = employeeId;
         this.userId = userId;
         this.parkingLotId = parkingLotId;
-        this.carNumebr = carNumebr;
-        this.endTime = endTime;
-        this.startTime = startTime;
+        this.carNumber = carNumber;
+        this.endAt = endAt;
+        this.createAt = createAt;
         this.appointTime = appointTime;
         this.appointAddress = appointAddress;
         this.status = status;
+    }
+
+    public Order(String carNumber, Long createAt, Long appointTime, String appointAddress, Long userId) {
+        this.userId = userId;
+        this.createAt = createAt;
+        this.appointTime = appointTime;
+        this.carNumber = carNumber;
+        this.appointAddress = appointAddress;
     }
 
     public Long getId() {
@@ -81,28 +84,28 @@ public class Order {
         this.parkingLotId = parkingLotId;
     }
 
-    public String getCarNumebr() {
-        return carNumebr;
+    public String getCarNumber() {
+        return carNumber;
     }
 
-    public void setCarNumebr(String carNumebr) {
-        this.carNumebr = carNumebr;
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
     }
 
-    public Long getEndTime() {
-        return endTime;
+    public Long getEndAt() {
+        return endAt;
     }
 
-    public void setEndTime(Long endTime) {
-        this.endTime = endTime;
+    public void setEndAt(Long endAt) {
+        this.endAt = endAt;
     }
 
-    public Long getStartTime() {
-        return startTime;
+    public Long getCreateAt() {
+        return createAt;
     }
 
-    public void setStartTime(Long startTime) {
-        this.startTime = startTime;
+    public void setCreateAt(Long createAt) {
+        this.createAt = createAt;
     }
 
     public Long getAppointTime() {
