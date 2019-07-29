@@ -54,7 +54,12 @@ public class OrderController {
 
     @PutMapping("/newOrders/{id}/parkinglot")
     public ResponseEntity updateOrderParkingLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot){
-        orderService.selectParkingLotById(id,parkingLot);
+        orderService.updateOrderParkingLot(id,parkingLot);
+        return ResponseEntity.ok().build();
+    }
+    @PatchMapping("/newOrders/{id}")
+    public ResponseEntity finishOrder(@PathVariable Long id){
+        orderService.finishOrder(id);
         return ResponseEntity.ok().build();
     }
 }
