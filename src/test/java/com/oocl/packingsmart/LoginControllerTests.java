@@ -34,6 +34,7 @@ public class LoginControllerTests {
     private EmployeeRepository employeeRepository;
     @Autowired
     private ObjectMapper mapper;
+    public static final String LOGIN_URL = "/api/employees/login?";
 
     public Employee employee;
 
@@ -58,7 +59,7 @@ public class LoginControllerTests {
     public void should_return_true_when_the_email_and_password_are_verified_to_be_correct() throws Exception {
         //When the email and password are verified to be correct, the login is successful.
         //then
-        final MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=" + employee.getEmail() +
+        final MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL + "username=" + employee.getEmail() +
                 "&password=" + employee.getPassword()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -72,7 +73,7 @@ public class LoginControllerTests {
     public void should_return_true_when_the_phone_and_password_are_verified_to_be_correct() throws Exception {
         //When the email and password are verified to be correct, the login is successful.
         //then
-        final MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=" + employee.getPhone() +
+        final MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=" + employee.getPhone() +
                 "&password=" + employee.getPassword()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -86,7 +87,7 @@ public class LoginControllerTests {
     public void should_return_true_when_the_id_and_password_are_verified_to_be_correct() throws Exception {
         //When the email and password are verified to be correct, the login is successful.
         //then
-        final MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=" + employee.getId() +
+        final MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=" + employee.getId() +
                 "&password=" + employee.getPassword()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -100,7 +101,7 @@ public class LoginControllerTests {
     public void should_return_error_when_the_email_is_not_correct_and_password_is_correct() throws Exception {
         //When the email is not correct and password is correct, the login is failed.
         //then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=1231321" +
+        this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=1231321" +
                 "&password=" + employee.getPassword()))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
@@ -110,7 +111,7 @@ public class LoginControllerTests {
     public void should_return_error_when_the_id_is_not_correct_and_password_is_correct() throws Exception {
         //When the id is not correct and password is correct, the login is failed.
         //then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=111" +
+        this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=111" +
                 "&password=" + employee.getPassword()))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
@@ -120,7 +121,7 @@ public class LoginControllerTests {
     public void should_return_error_when_the_phone_is_not_correct_and_password_is_correct() throws Exception {
         //When the phone is not correct and password is correct, the login is failed.
         //then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=18342536212" +
+        this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=18342536212" +
                 "&password=" + employee.getPassword()))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
@@ -130,7 +131,7 @@ public class LoginControllerTests {
     public void should_return_error_when_the_email_and_password_is_not_correct() throws Exception {
         //When the email and password is not correct, the login is failed.
         //then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=542543234@qq.com" +
+        this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=542543234@qq.com" +
                 "&password=sdvsv2123"))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
@@ -140,7 +141,7 @@ public class LoginControllerTests {
     public void should_return_error_when_the_id_and_password_is_not_correct() throws Exception {
         //When the id and password is not correct, the login is failed.
         //then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=1241" +
+        this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=1241" +
                 "&password=125dvbdfb"))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
@@ -150,7 +151,7 @@ public class LoginControllerTests {
     public void should_return_error_when_the_phone_and_password_is_not_correct() throws Exception {
         //When the phone and password is not correct, the login is failed.
         //then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users?username=18342536213" +
+        this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL+"username=18342536213" +
                 "&password=r2g4berbe"))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));

@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.logging.Logger;
 
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/employees")
 public class EmployeeController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
@@ -23,7 +24,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping(params = {"username","password"})
+    @PostMapping("/login")
     public ResponseEntity loginAuthentication(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws NotEmployeeException {
         Employee res = loginService.loginAuthentication(username, password);
         if (res == null) {
