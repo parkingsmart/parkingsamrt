@@ -40,9 +40,5 @@ public class ParkingLotController {
         return ResponseEntity.status(HttpStatus.OK).body(savedparkingLot);
 
     }
-    @GetMapping("/{employeeid}")
-    public ResponseEntity getAllParkingLotByEmployee(@PathVariable Long employeeid){
-        List<ParkingLot> parkingLotList=parkingLotService.getAllParkingLotByEmploy(employeeid);
-        return ResponseEntity.status(HttpStatus.OK).body(parkingLotList);
-    }
+
 }

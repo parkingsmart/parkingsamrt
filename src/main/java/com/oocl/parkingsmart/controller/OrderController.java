@@ -69,13 +69,13 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/newOrders/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity getNewOrders(@PathVariable Long id,@RequestBody Employee employee) {
         orderService.grabOrderById(id,employee);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/newOrders/{id}/parkinglot")
+    @PutMapping("/{id}/parkinglot")
     public ResponseEntity updateOrderParkingLot(@PathVariable Long id,@RequestBody ParkingLot parkingLot) throws NotEnoughCapacityException {
         orderService.updateOrderParkingLot(id,parkingLot);
         return ResponseEntity.ok().build();
@@ -85,4 +85,5 @@ public class OrderController {
         orderService.finishOrder(id);
         return ResponseEntity.ok().build();
     }
+
 }

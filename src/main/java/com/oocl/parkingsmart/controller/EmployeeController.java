@@ -1,6 +1,7 @@
 package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
+import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.service.EmployeeService;
@@ -80,6 +81,11 @@ public class EmployeeController {
         employeeService.updateParkingLotsManager(null, ids);
         return ResponseEntity.ok().build();
     }
+    @GetMapping(path = "/{id}/orders")
+    public ResponseEntity getOnGoingOrdersById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(employeeService.getOnGoingOrdersById(id));
+    }
+
 }
 
 
