@@ -4,6 +4,7 @@ package com.oocl.packingsmart.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.parkingsmart.ParkingSmartApplication;
 import com.oocl.parkingsmart.entity.Employee;
+import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.repository.EmployeeRepository;
 import org.json.JSONArray;
 import org.junit.Test;
@@ -18,8 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -35,7 +36,7 @@ public class EmployeeControllerTests {
     private EmployeeRepository employeeRepository;
 
     @Test
-    public void should_return_created_when_success_add_order() throws Exception {
+    public void should_return_created_sucessed_when_success_add_order() throws Exception {
         // given
         employeeRepository.deleteAll();
         Employee order = new Employee();
@@ -54,7 +55,7 @@ public class EmployeeControllerTests {
     }
 
     @Test
-    public void should_return_all_orders() throws Exception {
+    public void should_return_all_users_when_get_users() throws Exception {
 
         employeeRepository.deleteAll();
         Employee employee_1 = new Employee();
@@ -75,5 +76,30 @@ public class EmployeeControllerTests {
         // then
         Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(0).get("name"));
     }
-    
+
+    @Test
+    public void should_update_user_career_isActive_when_success_put_a_user() throws Exception{
+
+        employeeRepository.deleteAll();
+        Employee employee = new Employee();
+        employee.setName("aaa");
+        employee.setEmail("1332435@163.com");
+        employee.setPhone("12334335625");
+        employee.setPassword("11223344");
+        employee.setOfficeId(0);
+        Employee new_employee = employeeRepository.saveAndFlush(employee);
+
+        new_employee.setOfficeId(1);
+
+        String json = new ObjectMapper().writeValueAsString(new_employee);
+        ResultActions result = this.mockMvc.perform(put("/users/" + employee.getId()).
+                contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).
+                content(json));
+
+        assertEquals(1,employeeRepository.findById(employee.getId()).get().getOfficeId());
+    }
+
+
+
+
 }
