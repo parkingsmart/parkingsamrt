@@ -16,7 +16,7 @@ public class Employee {
     private String phone;
     @Column(nullable = false)
     private String password;
-    private int OfficeId;
+    private int officeId;
     private boolean isWork;
 
     public Employee() {
@@ -63,11 +63,11 @@ public class Employee {
     }
 
     public int getOfficeId() {
-        return OfficeId;
+        return officeId;
     }
 
     public void setOfficeId(int officeId) {
-        OfficeId = officeId;
+        officeId = officeId;
     }
 
     public boolean isWork() {
