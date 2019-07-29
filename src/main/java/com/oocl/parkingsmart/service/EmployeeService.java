@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.SplittableRandom;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,15 +32,15 @@ public class EmployeeService {
     private OrderRepository orderRepository;
 
     public void add(Employee employee) throws ResourceConflictException {
-        String password =NumberUtil.createPwd(8);
+        String password = NumberUtil.createPwd(8);
         employee.setPassword(password);
 
         List<Employee> employeeList = employeeRepository.findAll();
-        for(Employee el:employeeList){
-            if(employee.getEmail().equals(el.getEmail())) {
+        for (Employee el : employeeList) {
+            if (employee.getEmail().equals(el.getEmail())) {
                 throw new ResourceConflictException("邮箱已存在");
             }
-            if(employee.getPhone().equals(el.getPhone())) {
+            if (employee.getPhone().equals(el.getPhone())) {
                 throw new ResourceConflictException("手机号已存在");
             }
         }
@@ -58,6 +59,7 @@ public class EmployeeService {
     public List<ParkingLot> fetchParkingLotsById(Long id) {
         return parkingLotRepository.findAllByManager(id);
     }
+
     public Employee updateCareer(Long id, Employee employee) {
         Employee updateEmployee = employeeRepository.findById(id).get();
         updateEmployee.setOfficeId(employee.getOfficeId());
@@ -73,6 +75,9 @@ public class EmployeeService {
     }
 
     public List<Order> getOnGoingOrdersById(Long id) {
-        return orderRepository.findAllByEmployeeId(id);
+
+        List<Order> orderList = orderRepository.findAllByEmployeeId(id);
+        orderList = orderList.stream().filter(item -> (item.getStatus() != 0 && item.getStatus() != 4)).collect(Collectors.toList());
+        return  orderList;
     }
 }
