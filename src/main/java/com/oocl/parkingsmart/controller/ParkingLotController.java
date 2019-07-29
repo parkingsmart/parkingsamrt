@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/parking-lots")
 public class ParkingLotController {
@@ -20,7 +20,7 @@ public class ParkingLotController {
     @Autowired
     private ParkingLotService parkingLotService;
     @GetMapping
-    public ResponseEntity getAllParkingLots(@RequestParam(required = false, defaultValue = "1")int page) {
+    public ResponseEntity getAllParkingLots(@RequestParam(required = false, defaultValue = "0")int page) {
         HashMap parkingLotsMap = new HashMap();
         Long parkingLotsNum = parkingLotService.getAllParkingLotsNum();
         parkingLotsMap.put("AllParkingLotsNum", parkingLotsNum);

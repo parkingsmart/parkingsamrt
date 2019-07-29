@@ -24,6 +24,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class EmployeeControllerTests {
         parkingLotRepository.deleteAll();
     }
     @Test
-    public void should_return_created_when_success_add_order() throws Exception {
+    public void should_return_created_sucessed_when_success_add_order() throws Exception {
         // given
         Employee order = new Employee();
         order.setName("ccc");
@@ -65,7 +67,7 @@ public class EmployeeControllerTests {
         order.setPhone("13455698877");
         String json = new ObjectMapper().writeValueAsString(order);
         // when
-        ResultActions result = mockMvc.perform(post("/api/users")
+        ResultActions result = mockMvc.perform(post("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)
         );
@@ -89,11 +91,33 @@ public class EmployeeControllerTests {
         employeeRepository.saveAndFlush(employee_1);
         employeeRepository.saveAndFlush(employee_2);
         // when
-        String result = mockMvc.perform(get("/api/users")).andReturn().getResponse().getContentAsString();
+        String result = mockMvc.perform(get("/api/employees")).andReturn().getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(result);
         // then
         Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(0).get("name"));
     }
+
+    @Test
+    public void should_update_user_career_when_success_put_a_user() throws Exception{
+        Employee employee = new Employee();
+        employee.setName("aaa");
+        employee.setEmail("1332435@163.com");
+        employee.setPhone("12334335625");
+        employee.setPassword("11223344");
+        employee.setOfficeId(0);
+        Employee new_employee = employeeRepository.saveAndFlush(employee);
+
+        new_employee.setOfficeId(1);
+
+        String json = new ObjectMapper().writeValueAsString(new_employee);
+        ResultActions result = this.mockMvc.perform(put("/api/employees/" + employee.getId()).
+                contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).
+                content(json));
+
+        assertEquals(1,employeeRepository.findById(employee.getId()).get().getOfficeId());
+    }
+
+
 
     @Test
     public void should_return_manager_all_parkingLot_when_find_by_Manager_id() throws Exception {
@@ -107,7 +131,7 @@ public class EmployeeControllerTests {
         parkingLotRepository.saveAndFlush(parkingLot3);
         parkingLotRepository.saveAndFlush(parkingLot4);
         //when
-        ResultActions result = mockMvc.perform(get("/api/users/1/parking-lots"));
+        ResultActions result = mockMvc.perform(get("/api/employees/1/parking-lots"));
         //then
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].name", Matchers.contains("parkingLot1", "parkingLot2", "parkingLot3")))
@@ -130,7 +154,7 @@ public class EmployeeControllerTests {
                 parkingLotRepository.findByName("parkingLot4").getId(),
                 parkingLotRepository.findByName("parkingLot5").getId());
         //when
-        mockMvc.perform(post("/api/users/4/parking-lots/appointments")
+        mockMvc.perform(post("/api/employees/4/parking-lots/appointments")
         .contentType(MediaType.APPLICATION_JSON_UTF8)
         .content(mapper.writeValueAsString(ids)))
         .andExpect(status().isOk());

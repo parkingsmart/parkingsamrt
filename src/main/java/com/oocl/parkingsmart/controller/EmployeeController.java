@@ -2,7 +2,7 @@ package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.ParkingLot;
-import com.oocl.parkingsmart.exception.NotEmployeeException;
+import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.service.EmployeeService;
 import com.oocl.parkingsmart.service.LoginService;
@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.logging.Logger;
 
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/employees")
 public class EmployeeController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
@@ -23,11 +24,11 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping(params = {"username","password"})
-    public ResponseEntity loginAuthentication(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws NotEmployeeException {
+    @PostMapping("/login")
+    public ResponseEntity loginAuthentication(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws AuthenticateFailedException {
         Employee res = loginService.loginAuthentication(username, password);
         if (res == null) {
-            throw new NotEmployeeException();
+            throw new AuthenticateFailedException();
         }
         res.setPassword("");
         return ResponseEntity.ok().body(res);
@@ -80,6 +81,11 @@ public class EmployeeController {
         employeeService.updateParkingLotsManager(null, ids);
         return ResponseEntity.ok().build();
     }
+    @GetMapping(path = "/{id}/orders")
+    public ResponseEntity getOnGoingOrdersById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(employeeService.getOnGoingOrdersById(id));
+    }
+
 }
 
 

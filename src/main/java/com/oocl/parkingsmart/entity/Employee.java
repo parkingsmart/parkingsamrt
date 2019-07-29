@@ -67,7 +67,7 @@ public class Employee {
     }
 
     public void setOfficeId(int officeId) {
-        officeId = officeId;
+        this.officeId = officeId;
     }
 
     public boolean isWork() {

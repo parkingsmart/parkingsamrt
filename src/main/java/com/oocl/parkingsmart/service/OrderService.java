@@ -3,6 +3,7 @@ package com.oocl.parkingsmart.service;
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
+import com.oocl.parkingsmart.exception.NotEnoughCapacityException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class OrderService {
 
     public static final int PAGE_SIZE = 10;
 
+    public List<Order> getAllOrders(){
+        return orderRepository.findAll();
+    }
+
     public Long getAllOrdersNum() {
         return orderRepository.count();
     }
@@ -36,8 +41,12 @@ public class OrderService {
         return order1;
     }
 
-    public List<Order> getAllNewOrders() {
-        return orderRepository.getNewOrders();
+    public List<Order> getOrdersByStatus(int status) {
+        return orderRepository.findAllByStatus(status);
+    }
+
+    public List<Order> getPageOrdersByStatus(int status, int page){
+        return orderRepository.findByStatus(status, new PageRequest(page - 1, PAGE_SIZE)).getContent();
     }
 
     public void grabOrderById(Long id, Employee employee) {
@@ -47,20 +56,27 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public void updateOrderParkingLot(Long id, ParkingLot parkingLot) {
+    public void updateOrderParkingLot(Long id, ParkingLot parkingLot) throws NotEnoughCapacityException{
         Order order = orderRepository.findById(id).get();
-        order.setParkingLotId(parkingLot.getId());
-        orderRepository.save(order);
+        ParkingLot targetParkingLot=parkingLotRepository.findById(parkingLot.getId()).get();
+        if(targetParkingLot.getSize()>targetParkingLot.getParkedNum()){
+            targetParkingLot.setParkedNum(targetParkingLot.getParkedNum()+1);
+            order.setParkingLotId(parkingLot.getId());
+            orderRepository.save(order);
+        }else{
+            throw new NotEnoughCapacityException("车位已不足");
+        }
     }
 
-    public void finishOrder(Long id) {
+
+    public void updateOrderStatus(Long id, int status) {
         Order order = orderRepository.findById(id).get();
         if(order.getParkingLotId()!=null){
-            order.setStatus(2);
+            order.setStatus(status);
             ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
+            parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
             parkingLotRepository.saveAndFlush(parkingLot);
             orderRepository.save(order);
         }
-
     }
 }
