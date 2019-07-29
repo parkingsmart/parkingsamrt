@@ -88,4 +88,27 @@ public class OrderControllerTests {
                 andReturn().getResponse().getContentAsString();
     }
 
+    @Test
+    public void should_return_created_when_user_create_an_order() throws Exception{
+        // given
+        Date date = new Date();
+        Order order = new Order();
+
+        order.setUserId(1L);
+        order.setAppointAddress("南方软件园");
+        order.setCarNumber("粤CB91233");
+        order.setAppointTime(date.getTime());
+        order.setCreateAt(date.getTime());
+        order.setStatus(0);
+        // when
+        String json = new ObjectMapper().writeValueAsString(order);
+        // then
+        String content = this.mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json)).andExpect(status().isCreated()).
+                andReturn().getResponse().getContentAsString();
+
+    }
+
+
 }
