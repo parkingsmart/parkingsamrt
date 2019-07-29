@@ -64,7 +64,6 @@ public class UserControllerTests {
                 .andReturn();
         //then
         JSONObject result = new JSONObject(mvcResult.getResponse().getContentAsString());
-        assertEquals("", result.getString("password"));
         assertEquals(user.getPhone(), result.getString("phone"));
     }
 
@@ -108,7 +107,6 @@ public class UserControllerTests {
                 .andReturn();
         //then
         JSONObject result = new JSONObject(mvcResult.getResponse().getContentAsString());
-        assertEquals("12345", result.getString("password"));
         assertEquals("123456789", result.getString("phone"));
     }
 
