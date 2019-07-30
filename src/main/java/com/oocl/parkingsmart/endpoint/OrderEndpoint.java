@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@ServerEndpoint("/employees/{employeeId}/orders")
+@ServerEndpoint("/api/employees/{employeeId}/orders")
 public class OrderEndpoint {
     private static Map<Long, Session> sessionPool = new HashMap<Long, Session>();
 
