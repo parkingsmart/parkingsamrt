@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity getAllUserOrders(@PathVariable Long id, @RequestParam(required = false, defaultValue = "all") String msg) {
-        if (msg == "carNums") {
+        if ("carNums".equals(msg)) {
             List<String> carNums = userService.getAllUserCarNums(id);
             return ResponseEntity.status(HttpStatus.OK).body(carNums);
         } else {
