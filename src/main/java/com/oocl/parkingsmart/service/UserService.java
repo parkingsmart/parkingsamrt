@@ -8,6 +8,7 @@ import com.oocl.parkingsmart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Array;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,5 +44,11 @@ public class UserService {
 
     public User registered(String username, String password) {
         return userRepository.saveAndFlush(new User(username, password));
+    }
+
+    public List<String> getAllUserCarNums(Long id) {
+        List<String> carNums = orderRepository.findAllCarNums(id);
+        return carNums;
+
     }
 }
