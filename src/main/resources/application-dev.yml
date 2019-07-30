@@ -11,7 +11,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/parkingsmart-backend
     username: root
-    password: wongpuikong
+    password: oocl
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
