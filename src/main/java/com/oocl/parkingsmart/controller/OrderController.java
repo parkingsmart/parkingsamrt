@@ -70,7 +70,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity receiveAnOrder(@RequestBody Order order){
+    public ResponseEntity receiveAnOrder(@RequestBody Order order) throws ResourceConflictException {
         orderService.addOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
