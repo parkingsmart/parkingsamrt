@@ -110,11 +110,31 @@ public class OrderControllerTests {
 
     }
     @Test
-    public void should_return_exception_when_car_number_is_exist() throws Exception{
+    public void should_return_exception_when_car_is_not_finish() throws Exception{
         // given
 
         Order order = new Order();
         order.setUserId(1L);
+        order.setAppointAddress("南方软件园");
+        order.setCarNumber("粤A12345");
+        order.setAppointTime(new Date().getTime());
+        order.setCreateAt(new Date().getTime());
+        order.setStatus(2);
+        // when
+        String json = new ObjectMapper().writeValueAsString(order);
+        // then
+        this.mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json)).andExpect(status().isConflict()).
+                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 该车辆订单正在进行中！"));
+
+    }
+    @Test
+    public void should_return_exception_when__other_user_use_your_car() throws Exception{
+        // given
+
+        Order order = new Order();
+        order.setUserId(2L);
         order.setAppointAddress("南方软件园");
         order.setCarNumber("粤A12345");
         order.setAppointTime(new Date().getTime());
@@ -126,9 +146,10 @@ public class OrderControllerTests {
         this.mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)).andExpect(status().isConflict()).
-                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 车牌号已存在!"));
+                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 车牌号已被别人使用！！"));
 
     }
+
 
 
 
