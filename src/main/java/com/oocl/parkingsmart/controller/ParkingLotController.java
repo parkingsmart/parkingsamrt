@@ -1,8 +1,6 @@
 package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.ParkingLot;
-import com.oocl.parkingsmart.service.EmployeeService;
-import com.oocl.parkingsmart.service.LoginService;
 import com.oocl.parkingsmart.service.ParkingLotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
