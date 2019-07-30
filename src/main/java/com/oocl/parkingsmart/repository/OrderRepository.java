@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByEmployeeId(Long id);
 
+    @Query(value = "select distinct carNumber from Order where userId = :id")
+    List<String> findAllCarNums(@Param("id") Long id);
 }

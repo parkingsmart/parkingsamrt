@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Array;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -26,18 +27,25 @@ public class UserController {
     }
 
     @PostMapping("/registered")
-    public ResponseEntity registered(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password){
+    public ResponseEntity registered(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {
         User res = userService.registered(username, password);
         return ResponseEntity.ok().body(res);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity getAllUserOrders(@PathVariable Long id){
-        List<Order> orders =userService.getAllUserOrders(id);
-        return ResponseEntity.status(HttpStatus.OK).body(orders);
+    public ResponseEntity getAllUserOrders(@PathVariable Long id, @RequestParam(required = false, defaultValue = "all") String msg) {
+        if ("carNums".equals(msg)) {
+            List<String> carNums = userService.getAllUserCarNums(id);
+            return ResponseEntity.status(HttpStatus.OK).body(carNums);
+        } else {
+            List<Order> orders = userService.getAllUserOrders(id);
+            return ResponseEntity.status(HttpStatus.OK).body(orders);
+        }
     }
+
     @PutMapping(path = "/{id}")
-    public ResponseEntity putUserOrder(@PathVariable Long id,@RequestParam(name = "oderID") Long oderID){
-        Order order = userService.fetchACar(id,oderID);
+    public ResponseEntity putUserOrder(@PathVariable Long id, @RequestParam(name = "oderID") Long oderID) {
+        Order order = userService.fetchACar(id, oderID);
         return ResponseEntity.status(HttpStatus.OK).body(order);
 
     }

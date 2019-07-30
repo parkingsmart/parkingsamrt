@@ -1,5 +1,6 @@
 package com.oocl.parkingsmart.controller;
 
+import com.oocl.parkingsmart.endpoint.OrderEndpoint;
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
@@ -22,9 +23,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/orders")
 public class OrderController {
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
 
-
+    @Autowired
+    private OrderEndpoint orderEndpoint;
 
     @GetMapping
     public ResponseEntity getAllOrders() {
@@ -72,6 +74,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity receiveAnOrder(@RequestBody Order order) throws ResourceConflictException {
         orderService.addOrder(order);
+        orderEndpoint.sendAllMessage("1");
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
