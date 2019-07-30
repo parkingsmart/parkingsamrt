@@ -140,7 +140,7 @@ public class UserControllerTests {
         System.out.println(result);
         // then
         Assertions.assertEquals(3, jsonObject.get("status"));
-
     }
+
 }
 
