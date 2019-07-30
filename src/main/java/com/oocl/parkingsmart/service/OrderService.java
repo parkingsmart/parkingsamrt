@@ -4,6 +4,7 @@ import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.exception.NotEnoughCapacityException;
+import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,13 @@ public class OrderService {
         return orderRepository.findAll(pageRequest).getContent();
     }
 
-    public Order addOrder(Order order) {
+    public Order addOrder(Order order) throws ResourceConflictException {
+        List<Order> orders = orderRepository.findAll();
+        for(Order o : orders) {
+            if(o.getCarNumber().equals(order.getCarNumber())){
+                throw new ResourceConflictException("车牌号已存在!");
+            }
+        }
         Order order1 = orderRepository.save(order);
         return order1;
     }

@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,19 +97,39 @@ public class OrderControllerTests {
 
         order.setUserId(1L);
         order.setAppointAddress("南方软件园");
-        order.setCarNumber("粤CB91233");
+        order.setCarNumber("粤CB1323423");
         order.setAppointTime(date.getTime());
         order.setCreateAt(date.getTime());
         order.setStatus(0);
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
-        String content = this.mockMvc.perform(post("/api/orders")
+        this.mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(json)).andExpect(status().isCreated()).
-                andReturn().getResponse().getContentAsString();
+                .content(json)).andExpect(status().isCreated());
 
     }
+    @Test
+    public void should_return_exception_when_car_number_is_exist() throws Exception{
+        // given
+
+        Order order = new Order();
+        order.setUserId(1L);
+        order.setAppointAddress("南方软件园");
+        order.setCarNumber("粤A12345");
+        order.setAppointTime(new Date().getTime());
+        order.setCreateAt(new Date().getTime());
+        order.setStatus(0);
+        // when
+        String json = new ObjectMapper().writeValueAsString(order);
+        // then
+        this.mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json)).andExpect(status().isConflict()).
+                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 车牌号已存在!"));
+
+    }
+
 
 
 }
