@@ -21,7 +21,7 @@ public class UserService {
 
     public List<Order> getAllUserOrders(Long id) {
         List<Order> orderList = orderRepository.findAll();
-        List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId() == id).collect(Collectors.toList());
+        List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().longValue() == id.longValue()).collect(Collectors.toList());
         return resultorderList;
     }
 
