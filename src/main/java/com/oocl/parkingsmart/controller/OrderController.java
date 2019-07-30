@@ -6,18 +6,14 @@ import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.exception.NotEnoughCapacityException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
-import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.service.OrderService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/orders")
