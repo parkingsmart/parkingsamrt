@@ -13,13 +13,19 @@ public class User {
     private String password;
     @Column(name = "phone",nullable = false,unique = true)
     private String phone;
-
+    private Integer integral=0;
     public User() {
     }
 
     public User(String username, String password) {
         phone = username;
         this.password = password;
+    }
+
+    public User(String phone,String password,Integer integral) {
+        this.password = password;
+        this.phone = phone;
+        this.integral = integral;
     }
 
     public Long getId() {
@@ -45,6 +51,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
     }
 
     @Override

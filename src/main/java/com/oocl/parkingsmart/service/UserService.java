@@ -3,13 +3,15 @@ package com.oocl.parkingsmart.service;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
+import com.oocl.parkingsmart.exception.PasswordValidException;
+import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Array;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +46,20 @@ public class UserService {
 
     public User registered(String username, String password) {
         return userRepository.saveAndFlush(new User(username, password));
+    }
+
+    public User updatePassword(Long id, String oldPassword,String newPassword) throws PasswordValidException, ResourceNotFoundException {
+        User user = null;
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()){
+            user = optionalUser.get();
+            if(!user.getPassword().equals(oldPassword.trim())) {
+                throw new PasswordValidException();
+            }
+            user.setPassword(newPassword);
+            return userRepository.saveAndFlush(user);
+        }
+        throw new ResourceNotFoundException();
     }
 
     public List<String> getAllUserCarNums(Long id) {

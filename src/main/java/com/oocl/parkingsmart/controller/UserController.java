@@ -4,6 +4,8 @@ import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
+import com.oocl.parkingsmart.exception.PasswordValidException;
+import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,12 @@ public class UserController {
     public ResponseEntity putUserOrder(@PathVariable Long id, @RequestParam(name = "orderID") Long oderID) {
         Order order = userService.fetchACar(id, oderID);
         return ResponseEntity.status(HttpStatus.OK).body(order);
+
+    }
+    @PutMapping(path = "/{id}",params = {"oldPassword","newPassword"})
+    public ResponseEntity updateUserInfo(@PathVariable Long id,@RequestParam(name = "oldPassword") String oldPassword,@RequestParam(name = "newPassword") String newPassword) throws PasswordValidException, ResourceNotFoundException {
+        User user = userService.updatePassword(id,oldPassword,newPassword);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
 
     }
 }

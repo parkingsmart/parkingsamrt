@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ParkingSmartApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {ParkingSmartApplication.class})
 @AutoConfigureMockMvc
 @ActiveProfiles("nactivetest")
 public class UserControllerTests {
