@@ -140,7 +140,29 @@ public class UserControllerTests {
         System.out.println(result);
         // then
         Assertions.assertEquals(3, jsonObject.get("status"));
+
     }
 
+    @Test
+    public void should_get_car_num_list_when_get_orders_by_id() throws Exception {
+        // given
+        User user = new User("13726267000", "123");
+        User savedUser = userRepository.save(user);
+        Order order1 = new Order("粤A03566", 201907290737l, 201907290800l, "软件园", savedUser.getId());
+        Order order2 = new Order("粤B03566", 201907290732l, 201907290801l, "软件园", savedUser.getId());
+        orderRepository.save(order1);
+        orderRepository.save(order2);
+        String msg = "carNums";
+        // when
+        String json = new ObjectMapper().writeValueAsString(savedUser);
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users/"+savedUser.getId()).param("msg",msg)).andReturn().getResponse().getContentAsString();
+        System.out.println(result);
+        JSONArray jsonArray = new JSONArray(result);
+
+        // then
+        Assertions.assertEquals("粤B03566", jsonArray.get(0));
+        Assertions.assertEquals(2, jsonArray.length());
+
+    }
 }
 

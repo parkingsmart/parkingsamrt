@@ -24,7 +24,7 @@ public class UserService {
 
     public List<Order> getAllUserOrders(Long id) {
         List<Order> orderList = orderRepository.findAll();
-        List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId() == id).collect(Collectors.toList());
+        List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
         return resultorderList;
     }
 
@@ -60,5 +60,11 @@ public class UserService {
             return userRepository.saveAndFlush(user);
         }
         throw new ResourceNotFoundException();
+    }
+
+    public List<String> getAllUserCarNums(Long id) {
+        List<String> carNums = orderRepository.findAllCarNums(id);
+        return carNums;
+
     }
 }
