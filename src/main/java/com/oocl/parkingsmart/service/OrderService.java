@@ -93,4 +93,12 @@ public class OrderService {
     public Order getOrdersById(Long id) {
         return orderRepository.findById(id).get();
     }
+
+
+    public void payAnOrder(Long id, Long endTime) {
+        Order order = orderRepository.findById(id).get();
+        order.setStatus(5);
+        order.setEndAt(endTime);
+        orderRepository.save(order);
+    }
 }

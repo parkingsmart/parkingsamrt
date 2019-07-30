@@ -89,9 +89,17 @@ public class OrderController {
         orderService.updateOrderParkingLot(id,parkingLot);
         return ResponseEntity.ok().build();
     }
+
     @PatchMapping("/{id}")
-    public ResponseEntity updateOrderStatus(@PathVariable Long id,@RequestParam int status ){
+    public ResponseEntity updateOrderStatus(@PathVariable Long id,@RequestParam(name = "status") int status){
         orderService.updateOrderStatus(id,status);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping(value = "/{id}",params = {"endTime"})
+    public ResponseEntity updateOrderStatus(@PathVariable Long id,
+    @RequestParam(name = "endTime") Long endTime){
+        orderService.payAnOrder(id,endTime);
         return ResponseEntity.ok().build();
     }
 
