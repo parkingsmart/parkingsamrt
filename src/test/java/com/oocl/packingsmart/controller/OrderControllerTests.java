@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = ParkingSmartApplication.class)
+@SpringBootTest(classes = ParkingSmartApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("nactivetest")
 public class OrderControllerTests {
@@ -96,19 +97,60 @@ public class OrderControllerTests {
 
         order.setUserId(1L);
         order.setAppointAddress("南方软件园");
-        order.setCarNumber("粤CB91233");
+        order.setCarNumber("粤CB1323423");
         order.setAppointTime(date.getTime());
         order.setCreateAt(date.getTime());
         order.setStatus(0);
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
-        String content = this.mockMvc.perform(post("/api/orders")
+        this.mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(json)).andExpect(status().isCreated()).
-                andReturn().getResponse().getContentAsString();
+                .content(json)).andExpect(status().isCreated());
 
     }
+    @Test
+    public void should_return_exception_when_car_is_not_finish() throws Exception{
+        // given
+
+        Order order = new Order();
+        order.setUserId(1L);
+        order.setAppointAddress("南方软件园");
+        order.setCarNumber("粤A12345");
+        order.setAppointTime(new Date().getTime());
+        order.setCreateAt(new Date().getTime());
+        order.setStatus(2);
+        // when
+        String json = new ObjectMapper().writeValueAsString(order);
+        // then
+        this.mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json)).andExpect(status().isConflict()).
+                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 该车辆订单正在进行中！"));
+
+    }
+    @Test
+    public void should_return_exception_when__other_user_use_your_car() throws Exception{
+        // given
+
+        Order order = new Order();
+        order.setUserId(2L);
+        order.setAppointAddress("南方软件园");
+        order.setCarNumber("粤A12345");
+        order.setAppointTime(new Date().getTime());
+        order.setCreateAt(new Date().getTime());
+        order.setStatus(0);
+        // when
+        String json = new ObjectMapper().writeValueAsString(order);
+        // then
+        this.mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json)).andExpect(status().isConflict()).
+                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 车牌号已被别人使用！！"));
+
+    }
+
+
 
 
 }
