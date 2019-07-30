@@ -1,3 +1,10 @@
+cors:
+  allowed-origins: "*"
+  allowed-methods: GET, PUT, POST, DELETE, PATCH
+  allowed-headers: origin, content-type, accept, authorization
+  exposed-headers:
+  allow-credentials: true
+  max-age: 1800
 server:
   port: 8080
 logging:

@@ -1,11 +1,9 @@
 package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Employee;
-import com.oocl.parkingsmart.entity.ParkingLot;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.service.EmployeeService;
-import com.oocl.parkingsmart.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +18,11 @@ import java.util.logging.Logger;
 public class EmployeeController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
-    private LoginService loginService;
-    @Autowired
     private EmployeeService employeeService;
 
     @PostMapping("/login")
     public ResponseEntity loginAuthentication(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws AuthenticateFailedException {
-        Employee res = loginService.loginAuthentication(username, password);
+        Employee res = employeeService.loginAuthentication(username, password);
         if (res == null) {
             throw new AuthenticateFailedException();
         }
