@@ -172,5 +172,19 @@ public class UserControllerTests {
         // then
         Assertions.assertEquals("wrong user password", result);
     }
+    @Test
+    public void should_update_pay_password_when_add_pay_password() throws Exception {
+        // given
+        User user = new User("13726267000", "123");
+        User savedUser = userRepository.save(user);
+        // when
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?payPassword="+"666666"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        JSONObject jsonObject = new JSONObject(result);
+        // then
+        Assertions.assertEquals("666666", jsonObject.getString("payPassword"));
+    }
+
 }
 

@@ -76,4 +76,10 @@ public class UserService {
         order.setStatus(5);
         orderRepository.saveAndFlush(order);
     }
+
+    public User addPayPassword(Long id, String payPassword) {
+        User user = userRepository.findById(id).get();
+        user.setPayPassword(payPassword);
+        return userRepository.saveAndFlush(user);
+    }
 }
