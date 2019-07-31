@@ -77,7 +77,7 @@ public class EmployeeService {
     public List<Order> getOnGoingOrdersById(Long id) {
 
         List<Order> orderList = orderRepository.findAllByEmployeeId(id);
-        orderList = orderList.stream().filter(item -> (item.getStatus() != 0 && item.getStatus() != 4)).collect(Collectors.toList());
+        orderList = orderList.stream().filter(item -> (item.getStatus() != 0 && item.getStatus() != 5)).collect(Collectors.toList());
         return  orderList;
     }
 }

@@ -43,7 +43,7 @@ public class OrderService {
             if(o.getCarNumber().equals(order.getCarNumber()) && !o.getUserId().equals(order.getUserId())){
                 throw new ResourceConflictException("车牌号已被别人使用！！");
             }
-            if(o.getCarNumber().equals(order.getCarNumber()) && o.getStatus() != 4) {
+            if(o.getCarNumber().equals(order.getCarNumber()) && o.getStatus() < 4) {
                 throw new ResourceConflictException("该车辆订单正在进行中！");
             }
         }
@@ -83,14 +83,26 @@ public class OrderService {
         Order order = orderRepository.findById(id).get();
         if(order.getParkingLotId()!=null){
             order.setStatus(status);
-            ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
-            parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
-            parkingLotRepository.saveAndFlush(parkingLot);
+            if (status == 4){
+                order.setEndAt(System.currentTimeMillis());
+            }else {
+                ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
+                parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
+                parkingLotRepository.saveAndFlush(parkingLot);
+            }
             orderRepository.save(order);
         }
     }
 
     public Order getOrdersById(Long id) {
         return orderRepository.findById(id).get();
+    }
+
+
+    public void payAnOrder(Long id, Long endTime) {
+        Order order = orderRepository.findById(id).get();
+        order.setStatus(4);
+        order.setEndAt(endTime);
+        orderRepository.save(order);
     }
 }
