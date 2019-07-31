@@ -6,6 +6,7 @@ import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.PasswordValidException;
 import com.oocl.parkingsmart.exception.PayPasswordException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
+import com.oocl.parkingsmart.service.OrderService;
 import com.oocl.parkingsmart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws AuthenticateFailedException {
@@ -50,6 +54,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(order);
 
     }
+
+    @PutMapping(path = "/{id}", params = {"orderId", "status"})
+    public ResponseEntity updateUserOrderStatue(@PathVariable Long id, @RequestParam(name = "orderId") Long orderID, @RequestParam(name = "status") Integer status) {
+        orderService.updateOrderStatus(orderID, status);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PutMapping(path = "/{id}",params = {"oldPassword","newPassword"})
     public ResponseEntity updateUserInfo(@PathVariable Long id,@RequestParam(name = "oldPassword") String oldPassword,@RequestParam(name = "newPassword") String newPassword) throws PasswordValidException, ResourceNotFoundException {
         User user = userService.updatePassword(id,oldPassword,newPassword);
