@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ParkingSmartApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {ParkingSmartApplication.class},webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("nactivetest")
 public class UserControllerTests {
@@ -134,35 +134,43 @@ public class UserControllerTests {
         Order savedOrder = orderRepository.save(order);
         // when
         String json = new ObjectMapper().writeValueAsString(savedUser);
-        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?oderID="+savedOrder.getId())).andReturn().getResponse().getContentAsString();
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?orderID="+savedOrder.getId())).andReturn().getResponse().getContentAsString();
         JSONObject jsonObject = new JSONObject(result);
 
-        System.out.println(result);
         // then
-        Assertions.assertEquals(3, jsonObject.get("status"));
+        Assertions.assertEquals(3, jsonObject.getInt("status"));
 
     }
 
     @Test
-    public void should_get_car_num_list_when_get_orders_by_id() throws Exception {
+    public void should_return_a_update_user_when_update_a_user_password_by_userid_and_correct_oldPassword() throws Exception {
         // given
         User user = new User("13726267000", "123");
         User savedUser = userRepository.save(user);
-        Order order1 = new Order("粤A03566", 201907290737l, 201907290800l, "软件园", savedUser.getId());
-        Order order2 = new Order("粤B03566", 201907290732l, 201907290801l, "软件园", savedUser.getId());
-        orderRepository.save(order1);
-        orderRepository.save(order2);
-        String msg = "carNums";
         // when
         String json = new ObjectMapper().writeValueAsString(savedUser);
-        String result = this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users/"+savedUser.getId()).param("msg",msg)).andReturn().getResponse().getContentAsString();
-        System.out.println(result);
-        JSONArray jsonArray = new JSONArray(result);
-
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?oldPassword="+savedUser.getPassword()+"&newPassword="+"666"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        JSONObject jsonObject = new JSONObject(result);
+        User res = userRepository.findById(savedUser.getId()).get();
         // then
-        Assertions.assertEquals("粤B03566", jsonArray.get(0));
-        Assertions.assertEquals(2, jsonArray.length());
+        Assertions.assertEquals("13726267000", jsonObject.getString("phone"));
+        Assertions.assertEquals("666",res.getPassword());
+    }
 
+    @Test
+    public void should_failed_update_user_when_update_a_user_password_by_userid_and_is_not_correct_oldPassword() throws Exception {
+        // given
+        User user = new User("13726267000", "123");
+        User savedUser = userRepository.save(user);
+        // when
+        String json = new ObjectMapper().writeValueAsString(savedUser);
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?oldPassword=333"+"&newPassword="+"666"))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        // then
+        Assertions.assertEquals("wrong user password", result);
     }
 }
 
