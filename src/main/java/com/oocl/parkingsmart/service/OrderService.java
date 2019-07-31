@@ -23,6 +23,7 @@ public class OrderService {
     ParkingLotRepository parkingLotRepository;
 
     public static final int PAGE_SIZE = 10;
+    public static final int PRICE_PER_HOUR = 10;
 
     public List<Order> getAllOrders(){
         return orderRepository.findAll();
@@ -85,9 +86,11 @@ public class OrderService {
             order.setStatus(status);
             if (status == 4){
                 order.setEndAt(System.currentTimeMillis());
+                Double amount = getAllAmount(order);
+                order.setAmount(amount);
             }else {
-                ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
-                parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
+                ParkingLot parkingLot = parkingLotRepository.findById(order.getParkingLotId()).get();
+                parkingLot.setParkedNum(parkingLot.getParkedNum() - 1);
                 parkingLotRepository.saveAndFlush(parkingLot);
             }
             orderRepository.save(order);
@@ -105,4 +108,14 @@ public class OrderService {
         order.setEndAt(endTime);
         orderRepository.save(order);
     }
+
+    public double getAllAmount(Order order){
+        Long diffTime = order.getEndAt() - order.getCreateAt();
+        double minutesDiff =  (double)diffTime / (60 * 1000);
+        int hours = (int)(minutesDiff / 60);
+        int minutes = (int)minutesDiff % 60;
+        double amount = minutes == 0 ? hours * PRICE_PER_HOUR : (hours + 1) * PRICE_PER_HOUR;
+        return amount;
+    }
+
 }
