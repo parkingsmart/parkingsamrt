@@ -28,7 +28,9 @@ public class Order {
     @Column(nullable = false)
     private String appointAddress;
     private Integer status = 0;
-
+    private Double amount;
+    private Double discountAmount;
+    private Long promotionId;
     public Order() {
     }
 
