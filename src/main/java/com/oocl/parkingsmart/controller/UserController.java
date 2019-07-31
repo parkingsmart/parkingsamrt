@@ -4,6 +4,7 @@ import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.PasswordValidException;
+import com.oocl.parkingsmart.exception.PayPasswordException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}",params = {"payPassword"})
-    public ResponseEntity addPayPassword(@PathVariable Long id,@RequestParam(name = "payPassword") String payPassword){
+    public ResponseEntity addPayPassword(@PathVariable Long id,@RequestParam(name = "payPassword") String payPassword) throws PayPasswordException {
         User user = userService.addPayPassword(id,payPassword);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
