@@ -4,6 +4,7 @@ import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.PasswordValidException;
+import com.oocl.parkingsmart.exception.PayPasswordException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
@@ -77,7 +78,10 @@ public class UserService {
         orderRepository.saveAndFlush(order);
     }
 
-    public User addPayPassword(Long id, String payPassword) {
+    public User addPayPassword(Long id, String payPassword) throws PayPasswordException {
+        if(payPassword.length()!=6){
+            throw new PayPasswordException();
+        }
         User user = userRepository.findById(id).get();
         user.setPayPassword(payPassword);
         return userRepository.saveAndFlush(user);
