@@ -76,4 +76,10 @@ public class UserService {
         order.setStatus(5);
         orderRepository.saveAndFlush(order);
     }
+
+    public User getUserInfoById(Long id) {
+        System.out.println(id);
+        Optional<User> optionalUser = userRepository.findById(id);
+        return optionalUser.isPresent()?optionalUser.get():null;
+    }
 }

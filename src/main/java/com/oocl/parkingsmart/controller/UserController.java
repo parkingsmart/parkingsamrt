@@ -32,7 +32,7 @@ public class UserController {
         return ResponseEntity.ok().body(res);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}",params = {"msg"})
     public ResponseEntity getAllUserOrders(@PathVariable Long id, @RequestParam(required = false, defaultValue = "all") String msg) {
         if ("carNums".equals(msg)) {
             List<String> carNums = userService.getAllUserCarNums(id);
@@ -54,6 +54,12 @@ public class UserController {
         User user = userService.updatePassword(id,oldPassword,newPassword);
         return ResponseEntity.status(HttpStatus.OK).body(user);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getUserInfoById(@PathVariable Long id){
+        User user = userService.getUserInfoById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PatchMapping(path = "/{id}",params = {"orderId"})
