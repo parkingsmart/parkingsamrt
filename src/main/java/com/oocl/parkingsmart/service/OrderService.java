@@ -43,7 +43,7 @@ public class OrderService {
             if(o.getCarNumber().equals(order.getCarNumber()) && !o.getUserId().equals(order.getUserId())){
                 throw new ResourceConflictException("车牌号已被别人使用！！");
             }
-            if(o.getCarNumber().equals(order.getCarNumber()) && o.getStatus() != 4) {
+            if(o.getCarNumber().equals(order.getCarNumber()) && o.getStatus() < 4) {
                 throw new ResourceConflictException("该车辆订单正在进行中！");
             }
         }
