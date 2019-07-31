@@ -1,9 +1,6 @@
 package com.oocl.parkingsmart.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -23,6 +20,8 @@ public class ShopPromotions {
     private String shopMallName;
     @NotNull
     private Double amount;
+    @Column(name = "redemptionCode",nullable = false,unique = true)
+    private Long redemptionCode;
 
     public ShopPromotions() {
     }
@@ -81,6 +80,14 @@ public class ShopPromotions {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Long getRedemptionCode() {
+        return redemptionCode;
+    }
+
+    public void setRedemptionCode(Long redemptionCode) {
+        this.redemptionCode = redemptionCode;
     }
 
     @Override

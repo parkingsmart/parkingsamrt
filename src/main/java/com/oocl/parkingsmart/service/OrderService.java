@@ -111,11 +111,9 @@ public class OrderService {
     private void sendWebSocketData(int status) {
          if(status == 1){
              userEndpoint.sendAllMessage("您的订单已被接收，请等待小哥联系。");
-         }else if(status == 4){
+         }else if(status == 3){
              userEndpoint.sendAllMessage("您的车辆已被停放好，请放心。");
-        }else{
-             userEndpoint.sendAllMessage("updateData");
-         }
+        }
     }
 
     public Order getOrdersById(Long id) {

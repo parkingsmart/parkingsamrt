@@ -2,18 +2,24 @@ package com.oocl.parkingsmart.service;
 
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingPromotions;
+import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
+import com.oocl.parkingsmart.entity.UserShopPromotions;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.PasswordValidException;
 import com.oocl.parkingsmart.exception.PayPasswordException;
+import com.oocl.parkingsmart.exception.PromotionIsNotExistException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.ParkingPromotionsRepository;
+import com.oocl.parkingsmart.repository.ShopRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
+import com.oocl.parkingsmart.repository.UserShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +35,10 @@ public class UserService {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private ShopRepository shopRepository;
+    @Autowired
+    private UserShopRepository userShopRepository;
     public List<Order> getAllUserOrders(Long id) {
         List<Order> orderList = orderRepository.findAll();
         List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
@@ -110,6 +120,18 @@ public class UserService {
         orderService.finishOrder(orderId, promotionId);
     }
 
+    public List<ShopPromotions> getUserPromotionById(Long id) {
+        List<ShopPromotions> shopPromotions = new ArrayList<>();
+        List<UserShopPromotions> userShopPromotions = userShopRepository.findAllByUserId(id);
+        userShopPromotions.stream().filter(x->x.getActive()).forEach(x->addActivePromotion(x,shopPromotions));
+        return shopPromotions;
+    }
 
+    private void addActivePromotion(UserShopPromotions userShopPromotions,List<ShopPromotions> shopPromotions){
+        Optional<ShopPromotions> shopPromotionsOptional = shopRepository.findById(userShopPromotions.getShopId());
+        if(shopPromotionsOptional.isPresent()){
+            shopPromotions.add(shopPromotionsOptional.get());
+        }
+    }
 
 }

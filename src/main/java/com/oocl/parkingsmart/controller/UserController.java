@@ -1,10 +1,12 @@
 package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Order;
+import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.PasswordValidException;
 import com.oocl.parkingsmart.exception.PayPasswordException;
+import com.oocl.parkingsmart.exception.PromotionIsNotExistException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.service.OrderService;
 import com.oocl.parkingsmart.service.UserService;
@@ -95,4 +97,9 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}/promotions")
+    public ResponseEntity getUserPromotionById(@PathVariable Long id) {
+        List<ShopPromotions> shopPromotions = userService.getUserPromotionById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
+    }
 }
