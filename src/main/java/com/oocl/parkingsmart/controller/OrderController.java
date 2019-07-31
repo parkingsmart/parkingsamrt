@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-@CrossOrigin("*")
+
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -75,8 +75,8 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity grabOrderById(@PathVariable Long id,@RequestBody Employee employee) {
-        orderService.grabOrderById(id,employee);
+    public ResponseEntity grabOrderById(@PathVariable Long id,@RequestParam(name = "employeeId") Long employeeId) {
+        orderService.grabOrderById(id,employeeId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -86,7 +86,7 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping(value = "/{id}")
     public ResponseEntity updateOrderStatus(@PathVariable Long id,@RequestParam(name = "status") int status){
         orderService.updateOrderStatus(id,status);
         return ResponseEntity.ok().build();

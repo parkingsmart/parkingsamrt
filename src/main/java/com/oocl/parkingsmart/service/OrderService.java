@@ -59,9 +59,9 @@ public class OrderService {
         return orderRepository.findByStatus(status, new PageRequest(page - 1, PAGE_SIZE)).getContent();
     }
 
-    public void grabOrderById(Long id, Employee employee) {
+    public void grabOrderById(Long id, Long employeeId) {
         Order order = orderRepository.findById(id).get();
-        order.setEmployeeId(employee.getId());
+        order.setEmployeeId(employeeId);
         order.setStatus(1);
         orderRepository.save(order);
     }
