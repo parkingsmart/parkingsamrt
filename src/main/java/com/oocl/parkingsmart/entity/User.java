@@ -11,6 +11,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String password;
+    private String payPassword;
     @Column(name = "phone",nullable = false,unique = true)
     private String phone;
     private Integer integral=0;
@@ -72,5 +73,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
     }
 }
