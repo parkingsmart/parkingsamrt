@@ -86,4 +86,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @PatchMapping(value = "/{id}",params = {"orderId", "promotionId"})
+    public ResponseEntity finishOrder(@PathVariable Long id,
+                                      @RequestParam(name = "orderId") Long orderId,
+                                      @RequestParam(name = "promotionId") Long promotionId
+    ){
+        userService.finishOrder(id, orderId, promotionId);
+        return ResponseEntity.ok().build();
+    }
+
 }

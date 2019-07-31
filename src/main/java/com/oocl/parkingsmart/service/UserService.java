@@ -1,16 +1,19 @@
 package com.oocl.parkingsmart.service;
 
 import com.oocl.parkingsmart.entity.Order;
+import com.oocl.parkingsmart.entity.ParkingPromotions;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.PasswordValidException;
 import com.oocl.parkingsmart.exception.PayPasswordException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.repository.OrderRepository;
+import com.oocl.parkingsmart.repository.ParkingPromotionsRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +25,9 @@ public class UserService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderService orderService;
 
     public List<Order> getAllUserOrders(Long id) {
         List<Order> orderList = orderRepository.findAll();
@@ -92,4 +98,18 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.isPresent()?optionalUser.get():null;
     }
+
+    public void finishOrder(Long id, Long orderId, Long promotionId) {
+        User user = userRepository.findById(id).get();
+        if (promotionId == -1){
+            user.setIntegral(user.getIntegral() + 5);
+        }else {
+            user.setIntegral(user.getIntegral() - 15);
+        }
+        userRepository.saveAndFlush(user);
+        orderService.finishOrder(orderId, promotionId);
+    }
+
+
+
 }

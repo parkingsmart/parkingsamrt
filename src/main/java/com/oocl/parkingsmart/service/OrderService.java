@@ -4,14 +4,17 @@ import com.oocl.parkingsmart.endpoint.UserEndpoint;
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
+import com.oocl.parkingsmart.entity.ParkingPromotions;
 import com.oocl.parkingsmart.exception.NotEnoughCapacityException;
 import com.oocl.parkingsmart.exception.ResourceConflictException;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.ParkingLotRepository;
+import com.oocl.parkingsmart.repository.ParkingPromotionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Service
@@ -22,6 +25,9 @@ public class OrderService {
 
     @Autowired
     ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private ParkingPromotionsRepository parkingPromotionsRepository;
 
     @Autowired
     private UserEndpoint userEndpoint;
@@ -131,6 +137,32 @@ public class OrderService {
         int minutes = (int)minutesDiff % 60;
         double amount = minutes == 0 ? hours * PRICE_PER_HOUR : (hours + 1) * PRICE_PER_HOUR;
         return amount;
+    }
+
+    public void finishOrder(Long orderId, Long promotionId) {
+        Order order = orderRepository.findById(orderId).get();
+        order.setStatus(6);
+        if (promotionId == -1){
+            order.setDiscountAmount(order.getAmount());
+        }else {
+            order.setDiscountAmount(getDiscountAmount(promotionId, order.getAmount()));
+            order.setPromotionId(promotionId);
+        }
+        orderRepository.saveAndFlush(order);
+    }
+
+    public Double getDiscountAmount(Long promotionId, Double pay) {
+        ParkingPromotions parkingPromotions = parkingPromotionsRepository.findById(promotionId).get();
+        Integer type = parkingPromotions.getType();
+        Double amount = parkingPromotions.getAmount();
+        DecimalFormat df = new DecimalFormat("0.0");
+        Double discountAmount = 0.0;
+        if (type == 0) {
+            discountAmount = pay * amount;
+        } else if (type == 1) {
+            discountAmount = pay - amount;
+        }
+        return Double.parseDouble(df.format(discountAmount));
     }
 
 }
