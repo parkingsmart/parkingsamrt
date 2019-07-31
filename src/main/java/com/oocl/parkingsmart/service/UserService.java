@@ -77,6 +77,12 @@ public class UserService {
         orderRepository.saveAndFlush(order);
     }
 
+    public User addPayPassword(Long id, String payPassword) {
+        User user = userRepository.findById(id).get();
+        user.setPayPassword(payPassword);
+        return userRepository.saveAndFlush(user);
+    }
+
     public User getUserInfoById(Long id) {
         System.out.println(id);
         Optional<User> optionalUser = userRepository.findById(id);

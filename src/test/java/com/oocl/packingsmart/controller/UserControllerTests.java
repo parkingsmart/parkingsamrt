@@ -118,10 +118,10 @@ public class UserControllerTests {
         Order order = new Order("粤A03566", 201907290737l, 201907290800l, "软件园", savedUser.getId());
         Order savedOrder = orderRepository.save(order);
         // when
-        String result = mockMvc.perform(get("/api/users/" + savedUser.getId())).andReturn().getResponse().getContentAsString();
+        String result = mockMvc.perform(get("/api/users/" + savedUser.getId()).param("msg",order.getCarNumber())).andReturn().getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(result);
         // then
-        Assertions.assertEquals(order.getCarNumber(), jsonArray.getJSONObject(0).get("carNumber"));
+        Assertions.assertEquals(order.getCarNumber(),jsonArray.getJSONObject(0).getString("carNumber"));
 
     }
 
@@ -172,5 +172,19 @@ public class UserControllerTests {
         // then
         Assertions.assertEquals("wrong user password", result);
     }
+    @Test
+    public void should_update_pay_password_when_add_pay_password() throws Exception {
+        // given
+        User user = new User("13726267000", "123");
+        User savedUser = userRepository.save(user);
+        // when
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?payPassword="+"666666"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        JSONObject jsonObject = new JSONObject(result);
+        // then
+        Assertions.assertEquals("666666", jsonObject.getString("payPassword"));
+    }
+
 }
 

@@ -79,4 +79,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PutMapping(path = "/{id}",params = {"payPassword"})
+    public ResponseEntity addPayPassword(@PathVariable Long id,@RequestParam(name = "payPassword") String payPassword){
+        User user = userService.addPayPassword(id,payPassword);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
 }
