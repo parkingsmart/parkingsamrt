@@ -1,9 +1,11 @@
 package com.oocl.parkingsmart.controller;
 
 import com.oocl.parkingsmart.entity.Order;
+import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.AuthenticateFailedException;
 import com.oocl.parkingsmart.exception.PasswordValidException;
+import com.oocl.parkingsmart.exception.PromotionIsNotExistException;
 import com.oocl.parkingsmart.exception.ResourceNotFoundException;
 import com.oocl.parkingsmart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +69,9 @@ public class UserController {
         userService.updateIntegral(id, orderId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
+    @GetMapping("/{id}/promotions")
+    public ResponseEntity getUserPromotionById(@PathVariable Long id) {
+        List<ShopPromotions> shopPromotions = userService.getUserPromotionById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
+    }
 }

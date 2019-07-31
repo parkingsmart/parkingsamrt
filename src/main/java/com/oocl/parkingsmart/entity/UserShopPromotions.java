@@ -14,7 +14,6 @@ public class UserShopPromotions {
     private Long userId;
     private Long shopId;
     private Boolean isActive=true;
-
     public UserShopPromotions() {
     }
 
