@@ -1,5 +1,6 @@
 package com.oocl.parkingsmart.service;
 
+import com.oocl.parkingsmart.endpoint.UserEndpoint;
 import com.oocl.parkingsmart.entity.Employee;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ParkingLot;
@@ -22,6 +23,8 @@ public class OrderService {
     @Autowired
     ParkingLotRepository parkingLotRepository;
 
+    @Autowired
+    private UserEndpoint userEndpoint;
     public static final int PAGE_SIZE = 10;
     public static final int PRICE_PER_HOUR = 10;
 
@@ -61,6 +64,7 @@ public class OrderService {
     }
 
     public void grabOrderById(Long id, Long employeeId) {
+        sendWebSocketData(1);
         Order order = orderRepository.findById(id).get();
         order.setEmployeeId(employeeId);
         order.setStatus(1);
@@ -81,6 +85,7 @@ public class OrderService {
 
 
     public void updateOrderStatus(Long id, int status) {
+        sendWebSocketData(status);
         Order order = orderRepository.findById(id).get();
         if(order.getParkingLotId()!=null){
             order.setStatus(status);
@@ -94,6 +99,14 @@ public class OrderService {
                 parkingLotRepository.saveAndFlush(parkingLot);
             }
             orderRepository.save(order);
+        }
+    }
+
+    private void sendWebSocketData(int status) {
+         if(status == 1){
+             userEndpoint.sendAllMessage("您的订单已被接收，请等待小哥联系");
+         }else if(status == 4){
+             userEndpoint.sendAllMessage("您的车辆已被停放好，请放心");
         }
     }
 
