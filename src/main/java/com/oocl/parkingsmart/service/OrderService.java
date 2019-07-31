@@ -83,9 +83,13 @@ public class OrderService {
         Order order = orderRepository.findById(id).get();
         if(order.getParkingLotId()!=null){
             order.setStatus(status);
-            ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
-            parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
-            parkingLotRepository.saveAndFlush(parkingLot);
+            if (status == 4){
+                order.setEndAt(System.currentTimeMillis());
+            }else {
+                ParkingLot parkingLot=parkingLotRepository.findById(order.getParkingLotId()).get();
+                parkingLot.setParkedNum(parkingLot.getParkedNum()-1);
+                parkingLotRepository.saveAndFlush(parkingLot);
+            }
             orderRepository.save(order);
         }
     }
@@ -97,7 +101,7 @@ public class OrderService {
 
     public void payAnOrder(Long id, Long endTime) {
         Order order = orderRepository.findById(id).get();
-        order.setStatus(5);
+        order.setStatus(4);
         order.setEndAt(endTime);
         orderRepository.save(order);
     }
