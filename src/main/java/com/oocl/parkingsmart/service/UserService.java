@@ -82,4 +82,10 @@ public class UserService {
         user.setPayPassword(payPassword);
         return userRepository.saveAndFlush(user);
     }
+
+    public User getUserInfoById(Long id) {
+        System.out.println(id);
+        Optional<User> optionalUser = userRepository.findById(id);
+        return optionalUser.isPresent()?optionalUser.get():null;
+    }
 }
