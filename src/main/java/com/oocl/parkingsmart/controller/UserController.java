@@ -55,4 +55,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
 
     }
+
+    @PatchMapping(path = "/{id}",params = {"orderId"})
+    public ResponseEntity updateUserInfo(@PathVariable Long id,@RequestParam(name = "orderId") Long orderId) {
+        userService.updateIntegral(id, orderId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

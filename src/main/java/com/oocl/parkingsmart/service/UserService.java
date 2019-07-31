@@ -67,4 +67,13 @@ public class UserService {
         return carNums;
 
     }
+
+    public void updateIntegral(Long id, Long orderId) {
+        User user = userRepository.findById(id).get();
+        user.setIntegral(user.getIntegral()-5);
+        userRepository.saveAndFlush(user);
+        Order order = orderRepository.findById(orderId).get();
+        order.setStatus(5);
+        orderRepository.saveAndFlush(order);
+    }
 }
