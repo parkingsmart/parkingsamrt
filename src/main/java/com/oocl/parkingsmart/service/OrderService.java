@@ -84,11 +84,11 @@ public class OrderService {
         Order order = orderRepository.findById(id).get();
         if(order.getParkingLotId()!=null){
             order.setStatus(status);
-            if (status == 4){
+            if (status == 5){
                 order.setEndAt(System.currentTimeMillis());
                 Double amount = getAllAmount(order);
                 order.setAmount(amount);
-            }else {
+            }else if (status == 3){
                 ParkingLot parkingLot = parkingLotRepository.findById(order.getParkingLotId()).get();
                 parkingLot.setParkedNum(parkingLot.getParkedNum() - 1);
                 parkingLotRepository.saveAndFlush(parkingLot);
