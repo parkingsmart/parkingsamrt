@@ -9,6 +9,8 @@ import com.oocl.parkingsmart.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +45,17 @@ public class EmployeeController {
     public ResponseEntity getAll() {
         List<Employee> employees= employeeService.getAll();
         return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity getEmployeeInfoByToken() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            Long id = Long.parseLong(auth.getName());
+            return ResponseEntity.ok(employeeService.getById(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping(params = {"page"})
