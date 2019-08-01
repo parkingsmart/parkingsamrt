@@ -39,8 +39,9 @@ public class UserService {
     @Autowired
     private UserShopRepository userShopRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     public List<Order> getAllUserOrders(Long id) {
         Sort sort = new Sort(Sort.Direction.DESC,"createAt");
@@ -66,7 +67,7 @@ public class UserService {
     }
 
     public User registered(String username, String password) {
-        password = passwordEncoder.encode(password);
+        password = passwordEncoder().encode(password);
         return userRepository.saveAndFlush(new User(username, password));
     }
 
@@ -76,10 +77,10 @@ public class UserService {
 
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(!passwordEncoder.matches(oldPassword,user.getPassword())) {
+            if(!passwordEncoder().matches(oldPassword,user.getPassword())) {
                 throw new PasswordValidException();
             }
-            user.setPassword(passwordEncoder.encode(newPassword));
+            user.setPassword(passwordEncoder().encode(newPassword));
             return userRepository.saveAndFlush(user);
         }
         throw new ResourceNotFoundException();

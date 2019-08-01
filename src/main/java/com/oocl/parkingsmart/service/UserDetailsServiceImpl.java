@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,9 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Autowired
     private UserRepository userRepository;
@@ -35,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if ("admin".equals(username)) {
             Collection<SimpleGrantedAuthority> collection = new HashSet<>();
             collection.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            String password = passwordEncoder.encode("admin");
+            String password = passwordEncoder().encode("admin");
 
             return new User("admin", password, collection);
         }
