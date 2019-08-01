@@ -80,7 +80,7 @@ public class EmployeeService {
     }
 
     public List<Order> getOnGoingOrdersById(Long id) {
-        Sort sort = new Sort(Sort.Direction.DESC,"id");
+        Sort sort = new Sort(Sort.Direction.DESC,"createAt");
         List<Order> orderList = orderRepository.findAllByEmployeeId(id,sort);
         orderList = orderList.stream().filter(item -> (item.getStatus() != 0 && item.getStatus() != 6)).collect(Collectors.toList());
         return  orderList;
