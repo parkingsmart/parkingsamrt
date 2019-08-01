@@ -76,6 +76,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @GetMapping(params = {"phone"})
+    public ResponseEntity getUserInfoByPhone(@RequestParam("phone") String phone){
+        User user = userService.getUserByPhone(phone);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
     @PatchMapping(path = "/{id}",params = {"orderId"})
     public ResponseEntity updateUserInfo(@PathVariable Long id,@RequestParam(name = "orderId") Long orderId) {
         userService.updateIntegral(id, orderId);

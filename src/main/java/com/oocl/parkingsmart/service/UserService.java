@@ -141,4 +141,7 @@ public class UserService {
         }
     }
 
+    public User getUserByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
 }
