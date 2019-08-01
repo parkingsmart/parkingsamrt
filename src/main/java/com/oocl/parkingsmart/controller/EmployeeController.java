@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping("/employees")
 public class EmployeeController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
@@ -83,6 +83,11 @@ public class EmployeeController {
     @GetMapping(path = "/{id}/orders")
     public ResponseEntity getOnGoingOrdersById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(employeeService.getOnGoingOrdersById(id));
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity getEmployeeById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(employeeService.getById(id));
     }
 
 }

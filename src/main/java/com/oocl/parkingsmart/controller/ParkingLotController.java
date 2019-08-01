@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/parking-lots")
+@RequestMapping("/parking-lots")
 public class ParkingLotController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired

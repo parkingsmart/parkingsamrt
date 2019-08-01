@@ -84,4 +84,8 @@ public class EmployeeService {
         orderList = orderList.stream().filter(item -> (item.getStatus() != 0 && item.getStatus() != 6)).collect(Collectors.toList());
         return  orderList;
     }
+
+    public Employee getById(Long id) {
+        return employeeRepository.findById(id).orElse(null);
+    }
 }
