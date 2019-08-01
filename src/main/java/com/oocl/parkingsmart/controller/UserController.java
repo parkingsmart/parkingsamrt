@@ -7,6 +7,8 @@ import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.exception.*;
 import com.oocl.parkingsmart.service.OrderService;
 import com.oocl.parkingsmart.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RequestMapping("/users")
@@ -39,7 +44,13 @@ public class UserController {
     @PostMapping("/registered")
     public ResponseEntity registered(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {
         User res = userService.registered(username, password);
-        return ResponseEntity.ok().body(res);
+        String token = Jwts.builder()
+                .setSubject(username)
+                .claim("roles", Arrays.asList("ROLE_USER"))
+                .setExpiration(new Date(System.currentTimeMillis() + 864_000_000))
+                .signWith(SignatureAlgorithm.HS512, "ParkingSmart")
+                .compact();
+        return ResponseEntity.ok().header("Authorization", "Bearer " + " " + token).body(res);
     }
 
     @GetMapping(value = "/{id}",params = {"msg"})
