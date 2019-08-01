@@ -87,7 +87,7 @@ public class OrderController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity updateOrderStatus(@PathVariable Long id,@RequestParam(name = "status") int status){
+    public ResponseEntity updateOrderStatus(@PathVariable Long id,@RequestParam(name = "status") int status) throws ResourceConflictException{
         orderService.updateOrderStatus(id,status);
         return ResponseEntity.ok().build();
     }

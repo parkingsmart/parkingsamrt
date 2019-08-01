@@ -90,7 +90,7 @@ public class OrderService {
     }
 
 
-    public void updateOrderStatus(Long id, int status) {
+    public void updateOrderStatus(Long id, int status) throws ResourceConflictException{
         sendWebSocketData(status);
         Order order = orderRepository.findById(id).get();
         if(order.getParkingLotId()!=null){
@@ -105,6 +105,8 @@ public class OrderService {
                 parkingLotRepository.saveAndFlush(parkingLot);
             }
             orderRepository.save(order);
+        }else {
+            throw new ResourceConflictException("稍等，工作人员正在为您分配停车场");
         }
     }
 

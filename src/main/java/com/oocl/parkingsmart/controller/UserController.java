@@ -3,11 +3,7 @@ package com.oocl.parkingsmart.controller;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
-import com.oocl.parkingsmart.exception.AuthenticateFailedException;
-import com.oocl.parkingsmart.exception.PasswordValidException;
-import com.oocl.parkingsmart.exception.PayPasswordException;
-import com.oocl.parkingsmart.exception.PromotionIsNotExistException;
-import com.oocl.parkingsmart.exception.ResourceNotFoundException;
+import com.oocl.parkingsmart.exception.*;
 import com.oocl.parkingsmart.service.OrderService;
 import com.oocl.parkingsmart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +57,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}", params = {"orderId", "status"})
-    public ResponseEntity updateUserOrderStatue(@PathVariable Long id, @RequestParam(name = "orderId") Long orderID, @RequestParam(name = "status") Integer status) {
+    public ResponseEntity updateUserOrderStatue(@PathVariable Long id, @RequestParam(name = "orderId") Long orderID, @RequestParam(name = "status") Integer status) throws ResourceConflictException {
         orderService.updateOrderStatus(orderID, status);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
