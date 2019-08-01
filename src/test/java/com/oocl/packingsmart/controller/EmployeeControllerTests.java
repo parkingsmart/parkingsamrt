@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {ParkingSmartApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("nactivetest")
+@WithMockUser(username = "admin",roles = {"ADMIN"})
 public class EmployeeControllerTests {
 
     @Autowired
@@ -67,7 +69,7 @@ public class EmployeeControllerTests {
         order.setPhone("13455698877");
         String json = new ObjectMapper().writeValueAsString(order);
         // when
-        ResultActions result = mockMvc.perform(post("/api/employees")
+        ResultActions result = mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)
         );
@@ -91,7 +93,7 @@ public class EmployeeControllerTests {
         employeeRepository.saveAndFlush(employee_1);
         employeeRepository.saveAndFlush(employee_2);
         // when
-        String result = mockMvc.perform(get("/api/employees")).andReturn().getResponse().getContentAsString();
+        String result = mockMvc.perform(get("/employees")).andReturn().getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(result);
         // then
         Assertions.assertEquals(employee_1.getName(),jsonArray.getJSONObject(0).get("name"));
@@ -110,7 +112,7 @@ public class EmployeeControllerTests {
         new_employee.setOfficeId(1);
 
         String json = new ObjectMapper().writeValueAsString(new_employee);
-        ResultActions result = this.mockMvc.perform(put("/api/employees/" + employee.getId()).
+        ResultActions result = this.mockMvc.perform(put("/employees/" + employee.getId()).
                 contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).
                 content(json));
 
@@ -131,7 +133,7 @@ public class EmployeeControllerTests {
         parkingLotRepository.saveAndFlush(parkingLot3);
         parkingLotRepository.saveAndFlush(parkingLot4);
         //when
-        ResultActions result = mockMvc.perform(get("/api/employees/1/parking-lots"));
+        ResultActions result = mockMvc.perform(get("/employees/1/parking-lots"));
         //then
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].name", Matchers.contains("parkingLot1", "parkingLot2", "parkingLot3")))
@@ -154,7 +156,7 @@ public class EmployeeControllerTests {
                 parkingLotRepository.findByName("parkingLot4").getId(),
                 parkingLotRepository.findByName("parkingLot5").getId());
         //when
-        mockMvc.perform(post("/api/employees/4/parking-lots/appointments")
+        mockMvc.perform(post("/employees/4/parking-lots/appointments")
         .contentType(MediaType.APPLICATION_JSON_UTF8)
         .content(mapper.writeValueAsString(ids)))
         .andExpect(status().isOk());
