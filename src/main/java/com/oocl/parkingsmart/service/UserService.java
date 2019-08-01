@@ -72,7 +72,6 @@ public class UserService {
 
     public User updatePassword(Long id, String oldPassword,String newPassword) throws PasswordValidException, ResourceNotFoundException {
         User user = null;
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Optional<User> optionalUser = userRepository.findById(id);
 
         if(optionalUser.isPresent()){
