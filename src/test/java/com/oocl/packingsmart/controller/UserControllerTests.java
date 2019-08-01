@@ -2,7 +2,9 @@ package com.oocl.packingsmart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.parkingsmart.ParkingSmartApplication;
+import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
+import com.oocl.parkingsmart.entity.UserShopPromotions;
 import com.oocl.parkingsmart.repository.UserRepository;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -186,5 +188,18 @@ public class UserControllerTests {
         Assertions.assertEquals("666666", jsonObject.getString("payPassword"));
     }
 
+    @Test
+    public void should_return_promotion_when_add_promotion_by_userId_and_promotion_type_and_shop_name() throws Exception {
+        // given
+        User user  =new User("18812312312","123",5);
+        User savedUser = userRepository.save(user);
+        // when
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/users/"+savedUser.getId()+"/promotions?type=0&name=华发商都"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        JSONObject jsonObject = new JSONObject(result);
+        // then
+        Assertions.assertNotNull(jsonObject);
+    }
 }
 

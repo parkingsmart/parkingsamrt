@@ -20,9 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +43,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public static void main(String[] args) {
+
+    }
     public List<Order> getAllUserOrders(Long id) {
         List<Order> orderList = orderRepository.findAll();
         List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
@@ -111,7 +112,6 @@ public class UserService {
     }
 
     public User getUserInfoById(Long id) {
-        System.out.println(id);
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.isPresent()?optionalUser.get():null;
     }
@@ -141,8 +141,15 @@ public class UserService {
         }
     }
 
-    public ShopPromotions addPromotionById(Long id, Integer type) {
-        return null;
+    public ShopPromotions addPromotionById(Long id, Integer type,String name) {
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime+1000*60*60*24*7;
+        long redemptionCode = (startTime+endTime)/10000000;
+        double amount = type == 0?10:8.8;
+        ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,type,name,amount,redemptionCode);
+        final ShopPromotions shopPromotions1 = shopRepository.saveAndFlush(shopPromotions);
+        userShopRepository.saveAndFlush(new UserShopPromotions(id,shopPromotions1.getId()));
+        return shopPromotions1;
     }
     public User getUserByPhone(String phone) {
         return userRepository.findByPhone(phone);
