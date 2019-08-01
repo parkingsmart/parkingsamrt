@@ -207,6 +207,8 @@ public class UserControllerTests {
         shopPromotions.setType(0);
         shopPromotions.setShopMallName("华发商都");
         shopPromotions.setAmount(10d);
+        shopPromotions.setStartTime(0l);
+        shopPromotions.setEndTime(0l);
         String json = new ObjectMapper().writeValueAsString(shopPromotions);
         // when
         String result = this.mockMvc.perform(MockMvcRequestBuilders.post("/users/"+savedUser.getId()+"/promotions")

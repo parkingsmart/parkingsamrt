@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -24,6 +25,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+    public static final long START_TIME = new Date().getTime();
+    public static final String[] SHOP_NAME = {
+            "华发商都",
+            "扬名广场",
+            "摩尔广场",
+            "海韵城",
+            "免税商城",
+            "山姆会员店",
+    };
+    public static int TYPE = 0;
     @Autowired
     private UserRepository userRepository;
 
@@ -43,7 +54,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public List<Order> getAllUserOrders(Long id) {
-        Sort sort = new Sort(Sort.Direction.DESC,"createAt");
+        Sort sort = new Sort(Sort.Direction.DESC, "createAt");
         List<Order> orderList = orderRepository.findAll(sort);
         List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
         return resultorderList;
@@ -67,17 +78,32 @@ public class UserService {
 
     public User registered(String username, String password) {
         password = passwordEncoder.encode(password);
-        return userRepository.saveAndFlush(new User(username, password));
+        User user = userRepository.saveAndFlush(new User(username, password));
+        long startTime = START_TIME/1000;
+        long endTime = startTime + 60 * 60 * 24 * 7;
+        for (int index = 0; index < 6; index++) {
+            long redemptionCode = (System.currentTimeMillis() + (System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) / 10+index;
+            double amount = TYPE == 0 ? 10 : 8.8;
+            ShopPromotions shopPromotions = shopRepository.saveAndFlush(new ShopPromotions(startTime, endTime, TYPE, SHOP_NAME[index], amount, redemptionCode));
+            userShopRepository.saveAndFlush(new UserShopPromotions(user.getId(), shopPromotions.getId()));
+            if (index %2 == 0) {
+                startTime = endTime;
+                endTime = startTime + 60 * 60 * 24 * 7;
+                TYPE = 1;
+            }else {
+                TYPE = 0;
+            }
+        }
+        return user;
     }
 
-    public User updatePassword(Long id, String oldPassword,String newPassword) throws PasswordValidException, ResourceNotFoundException {
+    public User updatePassword(Long id, String oldPassword, String newPassword) throws PasswordValidException, ResourceNotFoundException {
         User user = null;
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Optional<User> optionalUser = userRepository.findById(id);
 
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             user = optionalUser.get();
-            if(!passwordEncoder.matches(oldPassword,user.getPassword())) {
+            if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
                 throw new PasswordValidException();
             }
             user.setPassword(passwordEncoder.encode(newPassword));
@@ -94,7 +120,7 @@ public class UserService {
 
     public void updateIntegral(Long id, Long orderId) {
         User user = userRepository.findById(id).get();
-        user.setIntegral(user.getIntegral()-5);
+        user.setIntegral(user.getIntegral() - 5);
         userRepository.saveAndFlush(user);
         Order order = orderRepository.findById(orderId).get();
         order.setStatus(5);
@@ -102,7 +128,7 @@ public class UserService {
     }
 
     public User addPayPassword(Long id, String payPassword) throws PayPasswordException {
-        if(payPassword.length()!=6){
+        if (payPassword.length() != 6) {
             throw new PayPasswordException();
         }
         User user = userRepository.findById(id).get();
@@ -112,14 +138,14 @@ public class UserService {
 
     public User getUserInfoById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
-        return optionalUser.isPresent()?optionalUser.get():null;
+        return optionalUser.isPresent() ? optionalUser.get() : null;
     }
 
     public void finishOrder(Long id, Long orderId, Long promotionId) {
         User user = userRepository.findById(id).get();
-        if (promotionId == -1){
+        if (promotionId == -1) {
             user.setIntegral(user.getIntegral() + 5);
-        }else {
+        } else {
             user.setIntegral(user.getIntegral() - 15);
         }
         userRepository.saveAndFlush(user);
@@ -129,39 +155,50 @@ public class UserService {
     public List<ShopPromotions> getUserPromotionById(Long id) {
         List<ShopPromotions> shopPromotions = new ArrayList<>();
         List<UserShopPromotions> userShopPromotions = userShopRepository.findAllByUserId(id);
-        userShopPromotions.stream().filter(x->x.getActive()).forEach(x->addActivePromotion(x,shopPromotions));
+        userShopPromotions.stream().filter(x -> x.getActive()).forEach(x -> addActivePromotion(x, shopPromotions));
         return shopPromotions;
     }
 
-    private void addActivePromotion(UserShopPromotions userShopPromotions,List<ShopPromotions> shopPromotions){
+    private void addActivePromotion(UserShopPromotions userShopPromotions, List<ShopPromotions> shopPromotions) {
         Optional<ShopPromotions> shopPromotionsOptional = shopRepository.findById(userShopPromotions.getShopId());
-        if(shopPromotionsOptional.isPresent()){
+        if (shopPromotionsOptional.isPresent()) {
             shopPromotions.add(shopPromotionsOptional.get());
         }
     }
 
     public ShopPromotions addPromotionById(Long id, ShopPromotions shop) throws UnsupportedEncodingException, UserNotFoundException, InsufficientPointsException {
-        long startTime = System.currentTimeMillis()/1000;
-        long endTime = startTime+60*60*24*7;
-        long redemptionCode = (System.currentTimeMillis()+(System.currentTimeMillis()+1000*60*60*24*7))/10;
-        String shopMallName = new String(shop.getShopMallName().getBytes("UTF-8"),"UTF-8");
-        ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,shop.getType(),shopMallName,shop.getAmount(),redemptionCode);
+        long startTime = 0;
+        long endTime = 0;
+        if (shop.getStartTime() != 0) {
+            startTime = shop.getStartTime();
+        } else {
+            startTime = System.currentTimeMillis()/1000;
+        }
+        if (shop.getEndTime() != 0) {
+            endTime = shop.getEndTime();
+        } else {
+            endTime = System.currentTimeMillis()/1000 + 60 * 60 * 24 * 7;
+        }
+        long redemptionCode = (System.currentTimeMillis() + (System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) / 10;
+        String shopMallName = new String(shop.getShopMallName().getBytes("UTF-8"), "UTF-8");
+        ShopPromotions shopPromotions = new ShopPromotions(startTime, endTime, shop.getType(), shopMallName, shop.getAmount(), redemptionCode);
         final ShopPromotions shopPromotions1 = shopRepository.saveAndFlush(shopPromotions);
         Optional<User> optionalUser = userRepository.findById(id);
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            if(user.getIntegral() < 20){
+            if (user.getIntegral() < 20) {
                 throw new InsufficientPointsException();
-            }else {
+            } else {
                 user.setIntegral(user.getIntegral() - 20);
                 userRepository.saveAndFlush(user);
             }
-        }else{
+        } else {
             throw new UserNotFoundException();
         }
-        userShopRepository.saveAndFlush(new UserShopPromotions(id,shopPromotions1.getId()));
+        userShopRepository.saveAndFlush(new UserShopPromotions(id, shopPromotions1.getId()));
         return shopPromotions1;
     }
+
     public User getUserByPhone(String phone) {
         return userRepository.findByPhone(phone);
     }
