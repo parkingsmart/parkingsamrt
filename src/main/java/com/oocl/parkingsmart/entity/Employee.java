@@ -1,5 +1,7 @@
 package com.oocl.parkingsmart.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -54,6 +56,7 @@ public class Employee {
         this.phone = phone;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

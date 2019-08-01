@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,8 +33,11 @@ public class EmployeeService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public void add(Employee employee) throws ResourceConflictException {
-        String password = NumberUtil.createPwd(8);
+        String password = passwordEncoder.encode("12345678");
         employee.setPassword(password);
 
         List<Employee> employeeList = employeeRepository.findAll();
@@ -75,9 +80,13 @@ public class EmployeeService {
     }
 
     public List<Order> getOnGoingOrdersById(Long id) {
-
-        List<Order> orderList = orderRepository.findAllByEmployeeId(id);
+        Sort sort = new Sort(Sort.Direction.DESC,"createAt");
+        List<Order> orderList = orderRepository.findAllByEmployeeId(id,sort);
         orderList = orderList.stream().filter(item -> (item.getStatus() != 0 && item.getStatus() != 6)).collect(Collectors.toList());
         return  orderList;
+    }
+
+    public Employee getById(Long id) {
+        return employeeRepository.findById(id).orElse(null);
     }
 }

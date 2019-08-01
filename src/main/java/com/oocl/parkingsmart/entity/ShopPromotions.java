@@ -10,7 +10,7 @@ public class ShopPromotions {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    private String title;
+    private String title = "无使用门槛";
     @NotNull
     private Long startTime;
     @NotNull
@@ -24,6 +24,15 @@ public class ShopPromotions {
     private Long redemptionCode;
 
     public ShopPromotions() {
+    }
+
+    public ShopPromotions(@NotNull Long startTime, @NotNull Long endTime, Integer type, @NotNull String shopMallName, @NotNull Double amount, Long redemptionCode) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.type = type;
+        this.shopMallName = shopMallName;
+        this.amount = amount;
+        this.redemptionCode = redemptionCode;
     }
 
     public Long getId() {

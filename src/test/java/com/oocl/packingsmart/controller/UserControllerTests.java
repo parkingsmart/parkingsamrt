@@ -2,8 +2,11 @@ package com.oocl.packingsmart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.parkingsmart.ParkingSmartApplication;
+import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
+import com.oocl.parkingsmart.entity.UserShopPromotions;
 import com.oocl.parkingsmart.repository.UserRepository;
+import com.oocl.parkingsmart.repository.UserShopRepository;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,6 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -34,11 +39,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(classes = {ParkingSmartApplication.class},webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("nactivetest")
+@WithMockUser(username = "admin",roles = {"ADMIN"})
 public class UserControllerTests {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private UserShopRepository userShopRepository;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -186,5 +194,28 @@ public class UserControllerTests {
         Assertions.assertEquals("666666", jsonObject.getString("payPassword"));
     }
 
+    @Test
+    public void should_return_promotion_when_add_promotion_by_userId_and_promotion_type_and_shop_name() throws Exception {
+        // given
+        User user  =new User("18812312312","123",5);
+        User savedUser = userRepository.save(user);
+        ShopPromotions shopPromotions = new ShopPromotions();
+        shopPromotions.setType(0);
+        shopPromotions.setShopMallName("华发商都");
+        shopPromotions.setAmount(10d);
+        String json = new ObjectMapper().writeValueAsString(shopPromotions);
+        // when
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.post("/users/"+savedUser.getId()+"/promotions")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn().getResponse().getContentAsString();
+        JSONObject jsonObject = new JSONObject(result);
+        UserShopPromotions userShopPromotions = userShopRepository.findByUserId(savedUser.getId());
+        // then
+        Assertions.assertNotNull(jsonObject);
+        Assertions.assertEquals(userShopPromotions.getShopId().longValue(),jsonObject.getLong("id"));
+    }
 }
 

@@ -8,19 +8,21 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.HashMap;
 import java.util.Map;
+
 @Component
-@ServerEndpoint("/users/{userId}/orders")
-public class UserEndpoint {
+@ServerEndpoint("/employees/{employeeId}/orderChange")
+public class OrderChangeEndpoint {
     private static Map<Long, Session> sessionPool = new HashMap<Long, Session>();
 
     @OnOpen
-    public void onOpen(@PathParam("userId") Long userId, Session session) {
-        sessionPool.put(userId, session);
-        System.out.println(String.format("用户: %d 进入连接", userId));
+    public void onOpen(@PathParam("employeeId") Long employeeId, Session session) {
+        sessionPool.put(employeeId, session);
     }
 
-    public void sendAllMessage(String message) {
-        for (Session session : sessionPool.values()) {
+    public void sendOneMessage(Long id, String message) {
+        Session session = sessionPool.get(id);
+
+        if (session != null) {
             try {
                 session.getAsyncRemote().sendText(message);
             } catch (Exception e) {
@@ -29,5 +31,3 @@ public class UserEndpoint {
         }
     }
 }
-
-

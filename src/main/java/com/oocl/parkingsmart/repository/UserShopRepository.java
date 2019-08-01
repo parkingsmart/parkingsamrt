@@ -9,4 +9,6 @@ public interface UserShopRepository extends JpaRepository<UserShopPromotions,Lon
     List<UserShopPromotions> findAllByUserId(Long id);
 
     UserShopPromotions findByUserIdAndShopId(Long userId, Long shopId);
+
+    UserShopPromotions findByUserId(Long id);
 }

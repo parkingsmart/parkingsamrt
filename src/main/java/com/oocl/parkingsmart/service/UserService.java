@@ -5,23 +5,21 @@ import com.oocl.parkingsmart.entity.ParkingPromotions;
 import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.entity.UserShopPromotions;
-import com.oocl.parkingsmart.exception.AuthenticateFailedException;
-import com.oocl.parkingsmart.exception.PasswordValidException;
-import com.oocl.parkingsmart.exception.PayPasswordException;
-import com.oocl.parkingsmart.exception.PromotionIsNotExistException;
-import com.oocl.parkingsmart.exception.ResourceNotFoundException;
+import com.oocl.parkingsmart.exception.*;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.ParkingPromotionsRepository;
 import com.oocl.parkingsmart.repository.ShopRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
 import com.oocl.parkingsmart.repository.UserShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,10 +35,16 @@ public class UserService {
 
     @Autowired
     private ShopRepository shopRepository;
+
     @Autowired
     private UserShopRepository userShopRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<Order> getAllUserOrders(Long id) {
-        List<Order> orderList = orderRepository.findAll();
+        Sort sort = new Sort(Sort.Direction.DESC,"createAt");
+        List<Order> orderList = orderRepository.findAll(sort);
         List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
         return resultorderList;
     }
@@ -62,18 +66,21 @@ public class UserService {
     }
 
     public User registered(String username, String password) {
+        password = passwordEncoder.encode(password);
         return userRepository.saveAndFlush(new User(username, password));
     }
 
     public User updatePassword(Long id, String oldPassword,String newPassword) throws PasswordValidException, ResourceNotFoundException {
         User user = null;
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Optional<User> optionalUser = userRepository.findById(id);
+
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(!user.getPassword().equals(oldPassword.trim())) {
+            if(!passwordEncoder.matches(oldPassword,user.getPassword())) {
                 throw new PasswordValidException();
             }
-            user.setPassword(newPassword);
+            user.setPassword(passwordEncoder.encode(newPassword));
             return userRepository.saveAndFlush(user);
         }
         throw new ResourceNotFoundException();
@@ -104,7 +111,6 @@ public class UserService {
     }
 
     public User getUserInfoById(Long id) {
-        System.out.println(id);
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.isPresent()?optionalUser.get():null;
     }
@@ -134,4 +140,29 @@ public class UserService {
         }
     }
 
+    public ShopPromotions addPromotionById(Long id, ShopPromotions shop) throws UnsupportedEncodingException, UserNotFoundException, InsufficientPointsException {
+        long startTime = System.currentTimeMillis()/1000;
+        long endTime = startTime+60*60*24*7;
+        long redemptionCode = (System.currentTimeMillis()+(System.currentTimeMillis()+1000*60*60*24*7))/10;
+        String shopMallName = new String(shop.getShopMallName().getBytes("UTF-8"),"UTF-8");
+        ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,shop.getType(),shopMallName,shop.getAmount(),redemptionCode);
+        final ShopPromotions shopPromotions1 = shopRepository.saveAndFlush(shopPromotions);
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            if(user.getIntegral() < 20){
+                throw new InsufficientPointsException();
+            }else {
+                user.setIntegral(user.getIntegral() - 20);
+                userRepository.saveAndFlush(user);
+            }
+        }else{
+            throw new UserNotFoundException();
+        }
+        userShopRepository.saveAndFlush(new UserShopPromotions(id,shopPromotions1.getId()));
+        return shopPromotions1;
+    }
+    public User getUserByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
 }

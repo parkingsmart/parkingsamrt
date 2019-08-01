@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api
 logging:
   level:
     org:
@@ -9,12 +11,20 @@ logging:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://localhost/parkingsmart-backend
+    url: jdbc:mysql://localhost/parkingsmart-backend?characterEncoding=utf-8
     username: root
     password: oocl
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
-
+  banner:
+    charset: UTF-8
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  messages:
+    encoding: UTF-8
 

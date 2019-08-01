@@ -1,24 +1,24 @@
 package com.oocl.parkingsmart.controller;
 
+import com.oocl.parkingsmart.endpoint.OrderChangeEndpoint;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
-import com.oocl.parkingsmart.exception.AuthenticateFailedException;
-import com.oocl.parkingsmart.exception.PasswordValidException;
-import com.oocl.parkingsmart.exception.PayPasswordException;
-import com.oocl.parkingsmart.exception.PromotionIsNotExistException;
-import com.oocl.parkingsmart.exception.ResourceNotFoundException;
+import com.oocl.parkingsmart.exception.*;
 import com.oocl.parkingsmart.service.OrderService;
 import com.oocl.parkingsmart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @CrossOrigin("*")
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RestController
 public class UserController {
     @Autowired
@@ -26,6 +26,9 @@ public class UserController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderChangeEndpoint orderChangeEndpoint;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws AuthenticateFailedException {
@@ -58,8 +61,14 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}", params = {"orderId", "status"})
-    public ResponseEntity updateUserOrderStatue(@PathVariable Long id, @RequestParam(name = "orderId") Long orderID, @RequestParam(name = "status") Integer status) {
+    public ResponseEntity updateUserOrderStatue(@PathVariable Long id, @RequestParam(name = "orderId") Long orderID, @RequestParam(name = "status") Integer status) throws ResourceConflictException {
         orderService.updateOrderStatus(orderID, status);
+
+
+        if (status == 4) {
+            Order order = orderService.getOrdersById(orderID);
+            orderChangeEndpoint.sendOneMessage(order.getEmployeeId(), "有用户申请取车啦, 请及时处理");
+        }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -73,6 +82,14 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity getUserInfoById(@PathVariable Long id){
         User user = userService.getUserInfoById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @GetMapping(headers = {"authorization"})
+    public ResponseEntity getUserInfoByPhone(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        User user = userService.getUserByPhone(name);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
@@ -100,6 +117,13 @@ public class UserController {
     @GetMapping("/{id}/promotions")
     public ResponseEntity getUserPromotionById(@PathVariable Long id) {
         List<ShopPromotions> shopPromotions = userService.getUserPromotionById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
+    }
+
+
+    @PostMapping(value = "/{id}/promotions")
+    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestBody ShopPromotions shop) throws UnsupportedEncodingException, InsufficientPointsException, UserNotFoundException {
+        ShopPromotions shopPromotions = userService.addPromotionById(id,shop);
         return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
     }
 }

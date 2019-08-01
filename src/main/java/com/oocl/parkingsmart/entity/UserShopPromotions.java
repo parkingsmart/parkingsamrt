@@ -17,6 +17,11 @@ public class UserShopPromotions {
     public UserShopPromotions() {
     }
 
+    public UserShopPromotions(Long userId, Long shopId) {
+        this.userId = userId;
+        this.shopId = shopId;
+    }
+
     public Long getId() {
         return id;
     }
