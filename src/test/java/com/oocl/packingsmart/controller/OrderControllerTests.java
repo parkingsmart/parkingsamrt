@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {ParkingSmartApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("nactivetest")
+@WithMockUser(username = "admin",roles = {"ADMIN"})
 public class OrderControllerTests {
 
     @Autowired
@@ -57,7 +59,7 @@ public class OrderControllerTests {
         // given
 
         //when
-        String content = this.mockMvc.perform(get("/api/orders")).andExpect(status().isOk()).
+        String content = this.mockMvc.perform(get("/orders")).andExpect(status().isOk()).
                 andReturn().getResponse().getContentAsString();
         //then
         JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("orders");
@@ -68,7 +70,7 @@ public class OrderControllerTests {
         // given
 
         //when
-        String content = this.mockMvc.perform(get("/api/orders")).andExpect(status().isOk()).
+        String content = this.mockMvc.perform(get("/orders")).andExpect(status().isOk()).
                 andReturn().getResponse().getContentAsString();
         //then
         JSONArray jsonArray_Order = new JSONObject(content).getJSONArray("orders");
@@ -83,7 +85,7 @@ public class OrderControllerTests {
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
-        String content = this.mockMvc.perform(post("/api/orders")
+        String content = this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)).andExpect(status().isCreated()).
                 andReturn().getResponse().getContentAsString();
@@ -104,7 +106,7 @@ public class OrderControllerTests {
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
-        this.mockMvc.perform(post("/api/orders")
+        this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)).andExpect(status().isCreated());
 
@@ -123,10 +125,10 @@ public class OrderControllerTests {
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
-        this.mockMvc.perform(post("/api/orders")
+        this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)).andExpect(status().isConflict()).
-                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 该车辆订单正在进行中！"));
+                andExpect(MockMvcResultMatchers.content().string("该车辆订单正在进行中！"));
 
     }
     @Test
@@ -143,10 +145,10 @@ public class OrderControllerTests {
         // when
         String json = new ObjectMapper().writeValueAsString(order);
         // then
-        this.mockMvc.perform(post("/api/orders")
+        this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)).andExpect(status().isConflict()).
-                andExpect(MockMvcResultMatchers.content().string("[Conflict]: 车牌号已被别人使用！！"));
+                andExpect(MockMvcResultMatchers.content().string("车牌号已被别人使用！！"));
 
     }
 

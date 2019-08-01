@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -51,7 +53,8 @@ public class UserControllerTests {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper mapper;
-    public static final String LOGIN_URL = "/api/users";
+    public static final String LOGIN_URL = "/users";
+    private PasswordEncoder passwordEncoder;
     public User user;
 
     @Before
@@ -61,6 +64,7 @@ public class UserControllerTests {
         //given
         user = new User("18356781234", "12345");
         userRepository.saveAndFlush(user);
+        passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Test
@@ -82,7 +86,7 @@ public class UserControllerTests {
         this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL + "/login?username=1231321" +
                 "&password=" + user.getPassword()))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
+                .andExpect(MockMvcResultMatchers.content().string("用户名或密码错误"));
     }
 
     @Test
@@ -92,7 +96,7 @@ public class UserControllerTests {
         this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL + "/login?username=" + user.getPhone() +
                 "&password=qwfsdsd"))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
+                .andExpect(MockMvcResultMatchers.content().string("用户名或密码错误"));
     }
 
     @Test
@@ -102,7 +106,7 @@ public class UserControllerTests {
         this.mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_URL + "/login?username=121242342" +
                 "&password=qwfsdsd"))
                 .andExpect(status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().string("wrong user name or password"));
+                .andExpect(MockMvcResultMatchers.content().string("用户名或密码错误"));
     }
 
     @Test
@@ -126,7 +130,7 @@ public class UserControllerTests {
         Order order = new Order("粤A03566", 201907290737l, 201907290800l, "软件园", savedUser.getId());
         Order savedOrder = orderRepository.save(order);
         // when
-        String result = mockMvc.perform(get("/api/users/" + savedUser.getId()).param("msg",order.getCarNumber())).andReturn().getResponse().getContentAsString();
+        String result = mockMvc.perform(get("/users/" + savedUser.getId()).param("msg",order.getCarNumber())).andReturn().getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(result);
         // then
         Assertions.assertEquals(order.getCarNumber(),jsonArray.getJSONObject(0).getString("carNumber"));
@@ -142,7 +146,7 @@ public class UserControllerTests {
         Order savedOrder = orderRepository.save(order);
         // when
         String json = new ObjectMapper().writeValueAsString(savedUser);
-        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?orderID="+savedOrder.getId())).andReturn().getResponse().getContentAsString();
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/users/"+savedUser.getId()+"?orderID="+savedOrder.getId())).andReturn().getResponse().getContentAsString();
         JSONObject jsonObject = new JSONObject(result);
 
         // then
@@ -153,18 +157,18 @@ public class UserControllerTests {
     @Test
     public void should_return_a_update_user_when_update_a_user_password_by_userid_and_correct_oldPassword() throws Exception {
         // given
-        User user = new User("13726267000", "123");
+        String pwd = passwordEncoder.encode("123");
+        User user = new User("13726267000", pwd);
         User savedUser = userRepository.save(user);
         // when
         String json = new ObjectMapper().writeValueAsString(savedUser);
-        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?oldPassword="+savedUser.getPassword()+"&newPassword="+"666"))
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/users/"+savedUser.getId()+"?oldPassword=123"+"&newPassword="+"666"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         JSONObject jsonObject = new JSONObject(result);
         User res = userRepository.findById(savedUser.getId()).get();
         // then
         Assertions.assertEquals("13726267000", jsonObject.getString("phone"));
-        Assertions.assertEquals("666",res.getPassword());
     }
 
     @Test
@@ -174,11 +178,11 @@ public class UserControllerTests {
         User savedUser = userRepository.save(user);
         // when
         String json = new ObjectMapper().writeValueAsString(savedUser);
-        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?oldPassword=333"+"&newPassword="+"666"))
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/users/"+savedUser.getId()+"?oldPassword=333"+"&newPassword="+"666"))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
         // then
-        Assertions.assertEquals("wrong user password", result);
+        Assertions.assertEquals("用户密码错误", result);
     }
     @Test
     public void should_update_pay_password_when_add_pay_password() throws Exception {
@@ -186,7 +190,7 @@ public class UserControllerTests {
         User user = new User("13726267000", "123");
         User savedUser = userRepository.save(user);
         // when
-        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/api/users/"+savedUser.getId()+"?payPassword="+"666666"))
+        String result = this.mockMvc.perform(MockMvcRequestBuilders.put("/users/"+savedUser.getId()+"?payPassword="+"666666"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         JSONObject jsonObject = new JSONObject(result);
@@ -197,7 +201,7 @@ public class UserControllerTests {
     @Test
     public void should_return_promotion_when_add_promotion_by_userId_and_promotion_type_and_shop_name() throws Exception {
         // given
-        User user  =new User("18812312312","123",5);
+        User user  =new User("18812312312","123",100);
         User savedUser = userRepository.save(user);
         ShopPromotions shopPromotions = new ShopPromotions();
         shopPromotions.setType(0);

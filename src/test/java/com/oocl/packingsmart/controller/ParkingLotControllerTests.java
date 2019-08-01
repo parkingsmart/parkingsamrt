@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {ParkingSmartApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("nactivetest")
+@WithMockUser(username = "admin",roles = {"ADMIN"})
 public class ParkingLotControllerTests {
     @Autowired
     private MockMvc mockMvc;
@@ -55,7 +57,7 @@ public class ParkingLotControllerTests {
         parkingLotA.setParkedNum(0);
         parkingLotRepository.saveAndFlush(parkingLotA);
         // when
-        String result = mockMvc.perform(get("/api/parking-lots")).andReturn().getResponse().getContentAsString();
+        String result = mockMvc.perform(get("/parking-lots")).andReturn().getResponse().getContentAsString();
         JSONObject jsonObject = new JSONObject(result);
         // then
         Assertions.assertEquals(parkingLotA.getName(), ((JSONArray)jsonObject.get("AllParkingLot")).getJSONObject(0).get("name"));
@@ -72,7 +74,7 @@ public class ParkingLotControllerTests {
         String json = new ObjectMapper().writeValueAsString(parkingLot);
 
         // when
-        ResultActions result = mockMvc.perform(post("/api/parking-lots")
+        ResultActions result = mockMvc.perform(post("/parking-lots")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(json)
         );
@@ -95,7 +97,7 @@ public class ParkingLotControllerTests {
         // when
         savedParkingLot.setSize(20);
         String json = new ObjectMapper().writeValueAsString(savedParkingLot);
-        ResultActions result = this.mockMvc.perform(put("/api/parking-lots/" + savedParkingLot.getId()).
+        ResultActions result = this.mockMvc.perform(put("/parking-lots/" + savedParkingLot.getId()).
                 contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).
                 content(json));
         int size = parkingLotRepository.findById(savedParkingLot.getId()).get().getSize();
@@ -115,7 +117,7 @@ public class ParkingLotControllerTests {
         // when
         savedParkingLot.setActive(false);
         String json = new ObjectMapper().writeValueAsString(savedParkingLot);
-        ResultActions result = this.mockMvc.perform(put("/api/parking-lots/" + savedParkingLot.getId()).
+        ResultActions result = this.mockMvc.perform(put("/parking-lots/" + savedParkingLot.getId()).
                 contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8).
                 content(json));
         boolean isActive = parkingLotRepository.findById(savedParkingLot.getId()).get().isActive();
