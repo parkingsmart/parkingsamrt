@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -115,7 +116,7 @@ public class UserController {
 
 
     @PostMapping(value = "/{id}/promotions")
-    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestBody ShopPromotions shop) {
+    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestBody ShopPromotions shop) throws UnsupportedEncodingException {
         ShopPromotions shopPromotions = userService.addPromotionById(id,shop);
         return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
     }

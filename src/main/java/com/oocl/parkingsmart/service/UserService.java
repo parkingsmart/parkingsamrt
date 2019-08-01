@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -138,11 +139,12 @@ public class UserService {
         }
     }
 
-    public ShopPromotions addPromotionById(Long id, ShopPromotions shop) {
-        long startTime = System.currentTimeMillis();
-        long endTime = startTime+1000*60*60*24*7;
-        long redemptionCode = (startTime+endTime)/10;
-        ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,shop.getType(),shop.getShopMallName(),shop.getAmount(),redemptionCode);
+    public ShopPromotions addPromotionById(Long id, ShopPromotions shop) throws UnsupportedEncodingException {
+        long startTime = System.currentTimeMillis()/1000;
+        long endTime = startTime+60*60*24*7;
+        long redemptionCode = (System.currentTimeMillis()+(System.currentTimeMillis()+1000*60*60*24*7))/10;
+        String shopMallName = new String(shop.getShopMallName().getBytes("UTF-8"),"UTF-8");
+        ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,shop.getType(),shopMallName,shop.getAmount(),redemptionCode);
         final ShopPromotions shopPromotions1 = shopRepository.saveAndFlush(shopPromotions);
         userShopRepository.saveAndFlush(new UserShopPromotions(id,shopPromotions1.getId()));
         return shopPromotions1;
