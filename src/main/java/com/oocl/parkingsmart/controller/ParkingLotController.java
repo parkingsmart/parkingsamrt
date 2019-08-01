@@ -18,7 +18,7 @@ public class ParkingLotController {
     @Autowired
     private ParkingLotService parkingLotService;
     @GetMapping
-    public ResponseEntity getAllParkingLots(@RequestParam(required = false, defaultValue = "0")int page) {
+    public ResponseEntity getAllParkingLots(@RequestParam(name="page", required = false, defaultValue = "0")int page) {
         HashMap parkingLotsMap = new HashMap();
         Long parkingLotsNum = parkingLotService.getAllParkingLotsNum();
         parkingLotsMap.put("AllParkingLotsNum", parkingLotsNum);
@@ -43,4 +43,12 @@ public class ParkingLotController {
         List<ParkingLot> parkingLotList=parkingLotService.getAllParkingLotByEmploy(employeeid);
         return ResponseEntity.status(HttpStatus.OK).body(parkingLotList);
     }
+
+    @GetMapping(params = {"id"})
+    public ResponseEntity getParkingLotById(@RequestParam("id") Long id){
+        ParkingLot parkingLot = parkingLotService.getParkingLotById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(parkingLot);
+
+    }
+
 }
