@@ -50,10 +50,10 @@ public class OrderService {
     public Order addOrder(Order order) throws ResourceConflictException {
         List<Order> orders = orderRepository.findAll();
         for(Order o : orders) {
-            if(o.getCarNumber().equals(order.getCarNumber()) && !o.getUserId().equals(order.getUserId())){
-                throw new ResourceConflictException("车牌号已被别人使用！！");
-            }
-            if(o.getCarNumber().equals(order.getCarNumber()) && o.getStatus() < 4) {
+            if(o.getCarNumber().equals(order.getCarNumber()) && o.getStatus() < 5) {
+                if(!o.getUserId().equals(order.getUserId())){
+                    throw new ResourceConflictException("车牌号已被别人使用！！");
+                }
                 throw new ResourceConflictException("该车辆订单正在进行中！");
             }
         }
