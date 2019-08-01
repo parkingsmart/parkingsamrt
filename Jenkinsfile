@@ -33,6 +33,7 @@ pipeline {
                 sh '''
                     chmod +x deploy.sh
                     sh deploy.sh
+                    sh 'nohup java -jar -Dspring.profiles.active=test build/libs/parkingsmart-backend-1.0-SNAPSHOT.jar > log.txt 2>&1 &'
                 '''
             }
         }
