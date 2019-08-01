@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,8 +32,11 @@ public class EmployeeService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public void add(Employee employee) throws ResourceConflictException {
-        String password = NumberUtil.createPwd(8);
+        String password = passwordEncoder.encode("12345678");
         employee.setPassword(password);
 
         List<Employee> employeeList = employeeRepository.findAll();

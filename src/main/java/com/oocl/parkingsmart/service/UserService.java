@@ -16,6 +16,7 @@ import com.oocl.parkingsmart.repository.ShopRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
 import com.oocl.parkingsmart.repository.UserShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -37,8 +38,13 @@ public class UserService {
 
     @Autowired
     private ShopRepository shopRepository;
+
     @Autowired
     private UserShopRepository userShopRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<Order> getAllUserOrders(Long id) {
         List<Order> orderList = orderRepository.findAll();
         List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
@@ -62,6 +68,7 @@ public class UserService {
     }
 
     public User registered(String username, String password) {
+        password = passwordEncoder.encode(password);
         return userRepository.saveAndFlush(new User(username, password));
     }
 
