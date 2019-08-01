@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -79,8 +80,8 @@ public class EmployeeService {
     }
 
     public List<Order> getOnGoingOrdersById(Long id) {
-
-        List<Order> orderList = orderRepository.findAllByEmployeeId(id);
+        Sort sort = new Sort(Sort.Direction.DESC,"id");
+        List<Order> orderList = orderRepository.findAllByEmployeeId(id,sort);
         orderList = orderList.stream().filter(item -> (item.getStatus() != 0 && item.getStatus() != 6)).collect(Collectors.toList());
         return  orderList;
     }
