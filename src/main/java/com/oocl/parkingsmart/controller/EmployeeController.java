@@ -9,13 +9,15 @@ import com.oocl.parkingsmart.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping("/employees")
 public class EmployeeController {
     private final Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
@@ -43,6 +45,17 @@ public class EmployeeController {
     public ResponseEntity getAll() {
         List<Employee> employees= employeeService.getAll();
         return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity getEmployeeInfoByToken() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            Long id = Long.parseLong(auth.getName());
+            return ResponseEntity.ok(employeeService.getById(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping(params = {"page"})
@@ -83,6 +96,11 @@ public class EmployeeController {
     @GetMapping(path = "/{id}/orders")
     public ResponseEntity getOnGoingOrdersById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(employeeService.getOnGoingOrdersById(id));
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity getEmployeeById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(employeeService.getById(id));
     }
 
 }

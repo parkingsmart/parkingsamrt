@@ -9,7 +9,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.util.HashMap;
 import java.util.Map;
 @Component
-@ServerEndpoint("/api/users/{userId}/orders")
+@ServerEndpoint("/users/{userId}/orders")
 public class UserEndpoint {
     private static Map<Long, Session> sessionPool = new HashMap<Long, Session>();
 

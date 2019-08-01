@@ -50,10 +50,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetails loadEmployeeById(String id) {
-        Optional<Employee> res = employeeRepository.findById(Long.parseLong(id));
+        Optional<Employee> res = Optional.empty();
+        try {
+            res = employeeRepository.findById(Long.parseLong(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (!res.isPresent()) {
-            throw new UsernameNotFoundException(id);
+            return null;
         }
         Employee employee = res.get();
         Collection<SimpleGrantedAuthority> collection = new HashSet<>();

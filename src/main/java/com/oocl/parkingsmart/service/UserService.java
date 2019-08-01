@@ -144,4 +144,7 @@ public class UserService {
     public ShopPromotions addPromotionById(Long id, Integer type) {
         return null;
     }
+    public User getUserByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
 }

@@ -13,12 +13,14 @@ import com.oocl.parkingsmart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin("*")
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RestController
 public class UserController {
     @Autowired
@@ -73,6 +75,14 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity getUserInfoById(@PathVariable Long id){
         User user = userService.getUserInfoById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @GetMapping(headers = {"authorization"})
+    public ResponseEntity getUserInfoByPhone(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        User user = userService.getUserByPhone(name);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
