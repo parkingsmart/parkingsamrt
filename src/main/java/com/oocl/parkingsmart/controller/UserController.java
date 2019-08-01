@@ -1,5 +1,6 @@
 package com.oocl.parkingsmart.controller;
 
+import com.oocl.parkingsmart.endpoint.OrderChangeEndpoint;
 import com.oocl.parkingsmart.entity.Order;
 import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
@@ -25,6 +26,9 @@ public class UserController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderChangeEndpoint orderChangeEndpoint;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) throws AuthenticateFailedException {
@@ -59,6 +63,12 @@ public class UserController {
     @PutMapping(path = "/{id}", params = {"orderId", "status"})
     public ResponseEntity updateUserOrderStatue(@PathVariable Long id, @RequestParam(name = "orderId") Long orderID, @RequestParam(name = "status") Integer status) throws ResourceConflictException {
         orderService.updateOrderStatus(orderID, status);
+
+
+        if (status == 4) {
+            Order order = orderService.getOrdersById(orderID);
+            orderChangeEndpoint.sendOneMessage(order.getEmployeeId(), "有用户申请取车啦, 请及时处理");
+        }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
