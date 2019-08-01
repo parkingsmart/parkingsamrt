@@ -70,8 +70,8 @@ public class OrderService {
     }
 
     public void grabOrderById(Long id, Long employeeId) {
-        sendWebSocketData(1);
         Order order = orderRepository.findById(id).get();
+        sendWebSocketData(1, order.getCarNumber());
         order.setEmployeeId(employeeId);
         order.setStatus(1);
         orderRepository.save(order);
@@ -91,8 +91,8 @@ public class OrderService {
 
 
     public void updateOrderStatus(Long id, int status) throws ResourceConflictException{
-        sendWebSocketData(status);
         Order order = orderRepository.findById(id).get();
+        sendWebSocketData(status, order.getCarNumber());
         if(order.getParkingLotId()!=null){
             order.setStatus(status);
             if (status == 5){
@@ -110,12 +110,14 @@ public class OrderService {
         }
     }
 
-    private void sendWebSocketData(int status) {
+    private void sendWebSocketData(int status, String carNumber) {
          if(status == 1){
              userEndpoint.sendAllMessage("您的订单已被接收，请等待小哥联系。");
          }else if(status == 3){
-             userEndpoint.sendAllMessage("您的车辆已被停放好，请放心。");
-        }
+             userEndpoint.sendAllMessage(String.format("您的车辆%s已被停放好，请放心。", carNumber));
+        } else if(status == 5) {
+             userEndpoint.sendAllMessage("您的订单已经完成，请及时确认");
+         }
     }
 
     public Order getOrdersById(Long id) {
