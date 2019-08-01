@@ -16,6 +16,7 @@ import com.oocl.parkingsmart.repository.ShopRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
 import com.oocl.parkingsmart.repository.UserShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,8 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public List<Order> getAllUserOrders(Long id) {
-        List<Order> orderList = orderRepository.findAll();
+        Sort sort = new Sort(Sort.Direction.DESC,"createAt");
+        List<Order> orderList = orderRepository.findAll(sort);
         List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
         return resultorderList;
     }
