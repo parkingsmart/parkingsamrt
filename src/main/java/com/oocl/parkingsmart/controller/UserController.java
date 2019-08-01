@@ -112,7 +112,7 @@ public class UserController {
 
 
     @PostMapping(value = "/{id}/promotions")
-    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestBody ShopPromotions shop) throws UnsupportedEncodingException {
+    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestBody ShopPromotions shop) throws UnsupportedEncodingException, InsufficientPointsException, UserNotFoundException {
         ShopPromotions shopPromotions = userService.addPromotionById(id,shop);
         return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
     }

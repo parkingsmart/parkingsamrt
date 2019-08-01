@@ -5,17 +5,17 @@ import com.oocl.parkingsmart.entity.ParkingPromotions;
 import com.oocl.parkingsmart.entity.ShopPromotions;
 import com.oocl.parkingsmart.entity.User;
 import com.oocl.parkingsmart.entity.UserShopPromotions;
-import com.oocl.parkingsmart.exception.AuthenticateFailedException;
-import com.oocl.parkingsmart.exception.PasswordValidException;
-import com.oocl.parkingsmart.exception.PayPasswordException;
-import com.oocl.parkingsmart.exception.PromotionIsNotExistException;
-import com.oocl.parkingsmart.exception.ResourceNotFoundException;
+import com.oocl.parkingsmart.exception.*;
 import com.oocl.parkingsmart.repository.OrderRepository;
 import com.oocl.parkingsmart.repository.ParkingPromotionsRepository;
 import com.oocl.parkingsmart.repository.ShopRepository;
 import com.oocl.parkingsmart.repository.UserRepository;
 import com.oocl.parkingsmart.repository.UserShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Configuration
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -73,13 +74,15 @@ public class UserService {
 
     public User updatePassword(Long id, String oldPassword,String newPassword) throws PasswordValidException, ResourceNotFoundException {
         User user = null;
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Optional<User> optionalUser = userRepository.findById(id);
+
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(!user.getPassword().equals(oldPassword.trim())) {
+            if(!passwordEncoder.matches(oldPassword,user.getPassword())) {
                 throw new PasswordValidException();
             }
-            user.setPassword(newPassword);
+            user.setPassword(passwordEncoder.encode(newPassword));
             return userRepository.saveAndFlush(user);
         }
         throw new ResourceNotFoundException();
@@ -139,13 +142,25 @@ public class UserService {
         }
     }
 
-    public ShopPromotions addPromotionById(Long id, ShopPromotions shop) throws UnsupportedEncodingException {
+    public ShopPromotions addPromotionById(Long id, ShopPromotions shop) throws UnsupportedEncodingException, UserNotFoundException, InsufficientPointsException {
         long startTime = System.currentTimeMillis()/1000;
         long endTime = startTime+60*60*24*7;
         long redemptionCode = (System.currentTimeMillis()+(System.currentTimeMillis()+1000*60*60*24*7))/10;
         String shopMallName = new String(shop.getShopMallName().getBytes("UTF-8"),"UTF-8");
         ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,shop.getType(),shopMallName,shop.getAmount(),redemptionCode);
         final ShopPromotions shopPromotions1 = shopRepository.saveAndFlush(shopPromotions);
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            if(user.getIntegral() < 20){
+                throw new InsufficientPointsException();
+            }else {
+                user.setIntegral(user.getIntegral() - 20);
+                userRepository.saveAndFlush(user);
+            }
+        }else{
+            throw new UserNotFoundException();
+        }
         userShopRepository.saveAndFlush(new UserShopPromotions(id,shopPromotions1.getId()));
         return shopPromotions1;
     }
