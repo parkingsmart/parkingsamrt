@@ -102,4 +102,10 @@ public class UserController {
         List<ShopPromotions> shopPromotions = userService.getUserPromotionById(id);
         return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
     }
+
+    @PostMapping(value = "/{id}/promotions",params = {"type"})
+    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestParam(name = "type") Integer type) {
+        ShopPromotions shopPromotions = userService.addPromotionById(id,type);
+        return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
+    }
 }

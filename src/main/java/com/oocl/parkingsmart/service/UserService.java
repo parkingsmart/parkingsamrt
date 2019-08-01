@@ -141,4 +141,7 @@ public class UserService {
         }
     }
 
+    public ShopPromotions addPromotionById(Long id, Integer type) {
+        return null;
+    }
 }
