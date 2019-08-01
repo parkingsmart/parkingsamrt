@@ -43,9 +43,6 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public static void main(String[] args) {
-
-    }
     public List<Order> getAllUserOrders(Long id) {
         List<Order> orderList = orderRepository.findAll();
         List<Order> resultorderList = orderList.stream().filter(order -> order.getUserId().equals(id)).collect(Collectors.toList());
@@ -141,12 +138,11 @@ public class UserService {
         }
     }
 
-    public ShopPromotions addPromotionById(Long id, Integer type,String name) {
+    public ShopPromotions addPromotionById(Long id, ShopPromotions shop) {
         long startTime = System.currentTimeMillis();
         long endTime = startTime+1000*60*60*24*7;
-        long redemptionCode = (startTime+endTime)/10000000;
-        double amount = type == 0?10:8.8;
-        ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,type,name,amount,redemptionCode);
+        long redemptionCode = (startTime+endTime)/10;
+        ShopPromotions shopPromotions = new ShopPromotions(startTime,endTime,shop.getType(),shop.getShopMallName(),shop.getAmount(),redemptionCode);
         final ShopPromotions shopPromotions1 = shopRepository.saveAndFlush(shopPromotions);
         userShopRepository.saveAndFlush(new UserShopPromotions(id,shopPromotions1.getId()));
         return shopPromotions1;

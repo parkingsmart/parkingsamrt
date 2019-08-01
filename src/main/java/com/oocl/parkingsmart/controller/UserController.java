@@ -114,9 +114,9 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/{id}/promotions",params = {"type","name"})
-    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestParam(name = "type") Integer type,@RequestParam(name = "name") String name) {
-        ShopPromotions shopPromotions = userService.addPromotionById(id,type,name);
+    @PostMapping(value = "/{id}/promotions")
+    public ResponseEntity addPromotionById(@PathVariable Long id,@RequestBody ShopPromotions shop) {
+        ShopPromotions shopPromotions = userService.addPromotionById(id,shop);
         return ResponseEntity.status(HttpStatus.OK).body(shopPromotions);
     }
 }
