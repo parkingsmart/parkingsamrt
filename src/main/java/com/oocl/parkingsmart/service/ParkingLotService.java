@@ -60,4 +60,9 @@ public class ParkingLotService {
             return false;
         }
     }
+
+    public ParkingLot getParkingLotById(Long id) {
+        return parkingLotRepository.findById(id).get();
+    }
+
 }
